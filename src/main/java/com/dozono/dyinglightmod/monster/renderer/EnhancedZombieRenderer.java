@@ -1,8 +1,8 @@
-package com.dozono.dyinglightmod.renderer;
+package com.dozono.dyinglightmod.monster.renderer;
 
 import com.dozono.dyinglightmod.DyingLight;
-import com.dozono.dyinglightmod.entities.EnhancedZombieEntity;
-import com.dozono.dyinglightmod.model.EnhancedZombieModel;
+import com.dozono.dyinglightmod.monster.entities.EnhancedZombieEntity;
+import com.dozono.dyinglightmod.monster.model.EnhancedZombieModel;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -15,7 +15,7 @@ public class EnhancedZombieRenderer extends MobRenderer<EnhancedZombieEntity, En
     }
 
     @Override
-    public ResourceLocation getEntityTexture(EnhancedZombieEntity entity) {
+    public ResourceLocation getTextureLocation(EnhancedZombieEntity p_110775_1_) {
         return TEXTURE;
     }
 }
