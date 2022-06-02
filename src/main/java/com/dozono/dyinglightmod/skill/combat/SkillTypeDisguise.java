@@ -1,13 +1,12 @@
-package com.dozono.dyinglightmod.skill;
+package com.dozono.dyinglightmod.skill.combat;
 
-import net.minecraft.entity.Entity;
+import com.dozono.dyinglightmod.skill.Skill;
+import com.dozono.dyinglightmod.skill.SkillType;
+import com.dozono.dyinglightmod.skill.survival.SkillTypeLuck;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -15,8 +14,6 @@ import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 
 public class SkillTypeDisguise extends SkillType {
     public static final SkillTypeDisguise Instance = new SkillTypeDisguise();
-    private boolean canDisguise;
-    private int tick = 0;
 
     private SkillTypeDisguise() {
         super(Builder.create().dependOn(SkillTypeLuck.INSTANCE));
@@ -28,28 +25,9 @@ public class SkillTypeDisguise extends SkillType {
 
     }
 
-    @SubscribeEvent
-    public void canDisguise(LivingHurtEvent event){
-        Entity entity = event.getEntity();
-        if (!(entity instanceof PlayerEntity) && event.getEntity().level.isClientSide) {
-            canDisguise =  false;
-        }
-        if(entity instanceof PlayerEntity){
-            DamageSource source = event.getSource();
-            canDisguise =  !(source.getEntity() instanceof MobEntity);
-            tick = 0;
-        }else {
-            canDisguise = tick<100;
-        }
-    }
+    @Override
+    public void onLevelUp(PlayerEntity player, Skill skill) {
 
-    @SubscribeEvent
-    public void tick(TickEvent.PlayerTickEvent event){
-        if(tick<100 && !canDisguise){
-            tick++;
-        }else if(tick>=100 && canDisguise) {
-            tick = 0;
-        }
     }
 
     @SubscribeEvent
@@ -58,9 +36,12 @@ public class SkillTypeDisguise extends SkillType {
         LivingEntity victim = event.getTarget();
         if (attacker.level.isClientSide) return;
 
-        if (victim instanceof PlayerEntity && canDisguise) {
+        if (victim instanceof PlayerEntity) {
+            int lastHurtByMobTimestamp = victim.getLastHurtByMobTimestamp();
+            int tickCount = victim.tickCount;
+            int diff = tickCount - lastHurtByMobTimestamp;
             victim.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
-                        if (attacker instanceof MobEntity && victim.isShiftKeyDown()) {
+                        if (attacker instanceof MobEntity && victim.isShiftKeyDown() && diff >= 100) {
                             ((MobEntity) attacker).setTarget(null);
                         }
                     }

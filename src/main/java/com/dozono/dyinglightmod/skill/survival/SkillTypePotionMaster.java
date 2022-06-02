@@ -1,5 +1,7 @@
-package com.dozono.dyinglightmod.skill;
+package com.dozono.dyinglightmod.skill.survival;
 
+import com.dozono.dyinglightmod.skill.Skill;
+import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -25,6 +27,10 @@ public class SkillTypePotionMaster extends SkillType {
     }
 
 
+    @Override
+    public void onLevelUp(PlayerEntity player, Skill skill) {
+
+    }
     @SubscribeEvent
     public void onGettingPotionEffect(PotionEvent.PotionAddedEvent event) {
         LivingEntity entityLiving = event.getEntityLiving();

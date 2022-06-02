@@ -1,5 +1,7 @@
 package com.dozono.dyinglightmod.skill;
 
+import com.dozono.dyinglightmod.skill.combat.SkillTypeDisguise;
+import com.dozono.dyinglightmod.skill.survival.*;
 import net.minecraft.entity.player.PlayerEntity;
 
 import javax.annotation.Nonnull;
@@ -17,6 +19,13 @@ public class SkillContainer {
         addSkill(SkillTypeDisguise.Instance);
         addSkill(SkillTypePotionMaster.Instance);
         addSkill(SkillTypeGastrosoph.Instance);
+        addSkill(SkillTypeMandom.INSTANCE);
+        addSkill(SkillTypeMender.Instance);
+        addSkill(SkillTypeSmeltingMaster.Instance);
+        //w8ing for test
+        addSkill(SkillTypeToolMaster.Instance);
+        addSkill(SkillTypeMiner.Instance);
+        addSkill(SkillTypeLumberman.Instance);
     }
 
     public void upgrade() {

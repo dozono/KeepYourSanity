@@ -1,9 +1,10 @@
-package com.dozono.dyinglightmod.skill;
+package com.dozono.dyinglightmod.skill.survival;
 
+import com.dozono.dyinglightmod.skill.Skill;
+import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Food;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,6 +23,11 @@ public class SkillTypeGastrosoph extends SkillType {
 
     @Override
     public void mount(PlayerEntity playerEntity, Skill skill) {
+
+    }
+
+    @Override
+    public void onLevelUp(PlayerEntity player, Skill skill) {
 
     }
 
