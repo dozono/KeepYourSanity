@@ -17,7 +17,7 @@ public class SkillTypePotionMaster extends SkillType {
     public static final SkillTypePotionMaster Instance = new SkillTypePotionMaster();
 
     public SkillTypePotionMaster() {
-        super(Builder.create());
+        super(Builder.create().setIndex(10));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

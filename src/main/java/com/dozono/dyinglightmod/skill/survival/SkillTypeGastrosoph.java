@@ -14,10 +14,10 @@ import java.util.Optional;
 import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 
 public class SkillTypeGastrosoph extends SkillType {
-    public static final SkillTypeGastrosoph Instance = new SkillTypeGastrosoph();
+    public static final SkillType INSTANCE = new SkillTypeGastrosoph().setRegistryName("gastrosoph");
 
     private SkillTypeGastrosoph() {
-        super(Builder.create());
+        super(Builder.create().setIndex(0));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

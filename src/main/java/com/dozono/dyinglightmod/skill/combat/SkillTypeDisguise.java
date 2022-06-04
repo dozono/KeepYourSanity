@@ -13,7 +13,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 
 public class SkillTypeDisguise extends SkillType {
-    public static final SkillTypeDisguise Instance = new SkillTypeDisguise();
+    public static final SkillTypeDisguise INSTANCE = new SkillTypeDisguise();
 
     private SkillTypeDisguise() {
         super(Builder.create().dependOn(SkillTypeLuck.INSTANCE));

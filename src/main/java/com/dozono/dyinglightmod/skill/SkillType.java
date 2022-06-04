@@ -11,13 +11,15 @@ import java.util.List;
 public abstract class SkillType extends ForgeRegistryEntry<SkillType> implements IForgeRegistryEntry<SkillType> {
     private final List<SkillType> dependencies;
     private final SkillType parent;
-    private final DisplayInfo displayInfo;
+    /**
+     * The index will affect the texture u, v of this skill
+     */
     private final int index;
 
     public SkillType(Builder builder) {
         this.dependencies = builder.deps;
         this.parent = builder.parent;
-        this.displayInfo = builder.displayInfo;
+        this.index = builder.index;
     }
 
     public List<SkillType> getDependencies() {
@@ -26,10 +28,6 @@ public abstract class SkillType extends ForgeRegistryEntry<SkillType> implements
 
     public SkillType getParent() {
         return parent;
-    }
-
-    public DisplayInfo getDisplay() {
-        return displayInfo;
     }
 
     public int getIndex() {
@@ -43,14 +41,14 @@ public abstract class SkillType extends ForgeRegistryEntry<SkillType> implements
     public static class Builder {
         private List<SkillType> deps = new ArrayList<>();
         private SkillType parent;
-        private DisplayInfo displayInfo;
+        private int index;
 
         public static Builder create() {
             return new Builder();
         }
 
-        public Builder setDisplayInfo(DisplayInfo displayInfo) {
-            this.displayInfo = displayInfo;
+        public Builder setIndex(int index) {
+            this.index = index;
             return this;
         }
 

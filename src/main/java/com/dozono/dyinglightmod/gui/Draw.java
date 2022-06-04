@@ -108,9 +108,9 @@ public class Draw {
         p_238471_1_.drawShadow(p_238471_0_, p_238471_2_, (float) (p_238471_3_ - p_238471_1_.width(p_238471_2_) / 2), (float) p_238471_4_, p_238471_5_);
     }
 
-    public static void drawCenteredString(MatrixStack p_238472_0_, FontRenderer p_238472_1_, ITextComponent p_238472_2_, int p_238472_3_, int p_238472_4_, int p_238472_5_) {
-        IReorderingProcessor ireorderingprocessor = p_238472_2_.getVisualOrderText();
-        p_238472_1_.drawShadow(p_238472_0_, ireorderingprocessor, (float) (p_238472_3_ - p_238472_1_.width(ireorderingprocessor) / 2), (float) p_238472_4_, p_238472_5_);
+    public static void drawCenteredString(MatrixStack matrixStack, FontRenderer fontRenderer, ITextComponent text, int x, int y, int p_238472_5_) {
+        IReorderingProcessor ireorderingprocessor = text.getVisualOrderText();
+        fontRenderer.drawShadow(matrixStack, ireorderingprocessor, (float) (x - fontRenderer.width(ireorderingprocessor) / 2), (float) y, p_238472_5_);
     }
 
     public static void drawString(MatrixStack p_238476_0_, FontRenderer p_238476_1_, String p_238476_2_, int p_238476_3_, int p_238476_4_, int p_238476_5_) {

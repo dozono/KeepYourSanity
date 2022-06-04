@@ -21,33 +21,33 @@ enum SkillTabType {
     private final int height;
     private final int max;
 
-    private SkillTabType(int p_i47386_3_, int p_i47386_4_, int p_i47386_5_, int p_i47386_6_, int p_i47386_7_) {
-        this.textureX = p_i47386_3_;
-        this.textureY = p_i47386_4_;
-        this.width = p_i47386_5_;
-        this.height = p_i47386_6_;
-        this.max = p_i47386_7_;
+    SkillTabType(int textureX, int textureY, int width, int height, int max) {
+        this.textureX = textureX;
+        this.textureY = textureY;
+        this.width = width;
+        this.height = height;
+        this.max = max;
     }
 
     public int getMax() {
         return this.max;
     }
 
-    public void draw(MatrixStack matrixStack, AbstractGui gui, int p_238686_3_, int p_238686_4_, boolean selected, int p_238686_6_) {
-        int i = this.textureX;
-        if (p_238686_6_ > 0) {
-            i += this.width;
+    public void draw(MatrixStack matrixStack, int x, int y, boolean selected, int index) {
+        int u = this.textureX;
+        if (index > 0) {
+            u += this.width;
         }
 
-        if (p_238686_6_ == this.max - 1) {
-            i += this.width;
+        if (index == this.max - 1) {
+            u += this.width;
         }
 
-        int j = selected ? this.textureY + this.height : this.textureY;
-        gui.blit(matrixStack, p_238686_3_ + this.getX(p_238686_6_), p_238686_4_ + this.getY(p_238686_6_), i, j, this.width, this.height);
+        int v = selected ? this.textureY + this.height : this.textureY;
+        Draw.blit(matrixStack, x + this.getX(index), y + this.getY(index), u, v, this.width, this.height);
     }
 
-    public void drawIcon(int x, int y, int index, ItemRenderer render, ItemStack p_192652_5_) {
+    public void drawIcon(MatrixStack matrixStack, int x, int y, int index, IconSprite sprite) {
         int i = x + this.getX(index);
         int j = y + this.getY(index);
         switch (this) {
@@ -68,7 +68,7 @@ enum SkillTabType {
                 j += 5;
         }
 
-        render.renderAndDecorateFakeItem(p_192652_5_, i, j);
+        Draw.blit(matrixStack, i, j, 24, 24, sprite.u, sprite.v, sprite.w, sprite.h, 256, 256);
     }
 
     public int getX(int index) {

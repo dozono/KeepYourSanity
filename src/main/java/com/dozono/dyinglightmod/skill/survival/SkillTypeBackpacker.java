@@ -5,7 +5,7 @@ import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class SkillTypeBackpacker extends SkillType {
-    public static final SkillTypeBackpacker Instance = new SkillTypeBackpacker();
+    public static final SkillType INSTANCE = new SkillTypeBackpacker().setRegistryName("backpacker");
 
     public SkillTypeBackpacker() {
         super(Builder.create());

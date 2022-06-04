@@ -5,10 +5,7 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -16,17 +13,18 @@ import net.minecraft.util.text.ITextComponent;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class SkillTabGui extends AbstractGui {
+public class SkillTabGui {
     private final Minecraft minecraft;
     private final SkillScreen screen;
     private final SkillTabType type;
     private final int index;
-    private final SkillType skill;
     private final ITextComponent title;
-    private final SkillEntryGui root;
-    private IconSprite iconSprite;
+    private final IconSprite iconSprite;
     private final ResourceLocation background;
+
+    private final SkillEntryGui root;
     private final Map<SkillType, SkillEntryGui> widgets = Maps.newLinkedHashMap();
+
     private double scrollX;
     private double scrollY;
     private int minX = Integer.MAX_VALUE;
@@ -49,61 +47,52 @@ public class SkillTabGui extends AbstractGui {
         this.screen = screen;
         this.type = type;
         this.index = index;
-        this.skill = skillType;
+        this.root = SkillEntryGuiCalculator.compute(mc, this, skillType, widgets);
+
         this.iconSprite = iconSprite;
         this.background = background;
         this.title = title;
-        this.root = new SkillEntryGui(this, mc, skillType);
-        this.addWidget(this.root, skillType);
+
+        this.updateRegion();
     }
 
-//    public SkillTypeTabGui(Minecraft mc, SkillScreen screen, AdvancementTabType type, int index, int page, SkillType adv, DisplayInfo info) {
-//        this(mc, screen, type, index, adv, info);
-//        this.page = page;
-//    }
-
-    @Nullable
-    public static SkillTabGui create(Minecraft p_193936_0_, SkillScreen p_193936_1_, int p_193936_2_, SkillType skillType) {
-        if (skillType.getDisplay() == null) {
-            return null;
-        }
-
+    public static SkillTabGui create(Minecraft minecraft, SkillScreen screen, int index, SkillType skillType,
+                                     ITextComponent title, IconSprite icon, ResourceLocation backgroundTexture) {
         for (SkillTabType tabType : SkillTabType.values()) {
-            if ((p_193936_2_ % SkillTabType.MAX_TABS) < tabType.getMax()) {
-                return new SkillTabGui(p_193936_0_, p_193936_1_, tabType, p_193936_2_ % SkillTabType.MAX_TABS, p_193936_2_ / AdvancementTabType.MAX_TABS, skillType, skillType.getDisplay());
+            if ((index % SkillTabType.MAX_TABS) < tabType.getMax()) {
+                return new SkillTabGui(minecraft, screen, tabType, index, skillType, title, icon, backgroundTexture);
             }
 
-            p_193936_2_ -= tabType.getMax();
+            index -= tabType.getMax();
         }
 
-        return null;
+        throw new RuntimeException("WTF");
     }
 
-    public int getPage() {
-        return page;
+    // render function
+
+    /**
+     * Render the tab texture
+     */
+    public void renderTab(MatrixStack matrixStack, int x, int y, boolean selected) {
+        this.type.draw(matrixStack, x, y, selected, this.index);
+        int i = screen.width;
+        int j = screen.height;
+        Draw.blit(matrixStack, x, y, i, j, getScreen().width, getScreen().height);
     }
 
-    public SkillType getSkill() {
-        return this.skill;
+    /**
+     * Render the icon on tab
+     */
+    public void renderIcon(MatrixStack matrixStack, int x, int y) {
+        this.minecraft.textureManager.bind(this.iconSprite.location);
+        this.type.drawIcon(matrixStack, x, y, this.index, this.iconSprite);
     }
 
-    public ITextComponent getTitle() {
-        return this.title;
-    }
-
-    public void drawTab(MatrixStack matrixStack, int x, int y, boolean selected) {
-//        this.type.draw(matrixStack, this, x, y, selected, this.index);
-
-        int j = selected ? this.textureY + this.height : this.textureY;
-        Draw.blit(matrixStack, x + this.getX(p_238686_6_), p_238686_4_ + this.getY(p_238686_6_), i, j, this.width, this.height);
-    }
-
-    public void drawIcon(int p_191796_1_, int p_191796_2_, ItemRenderer p_191796_3_) {
-
-//        this.type.drawIcon(p_191796_1_, p_191796_2_, this.index, p_191796_3_, this.icon);
-    }
-
-    public void drawContents(MatrixStack matrixStack) {
+    /**
+     * Render the tab inside body
+     */
+    public void renderContents(MatrixStack matrixStack) {
         if (!this.centered) {
             this.scrollX = (double) (117 - (this.maxX + this.minX) / 2);
             this.scrollY = (double) (56 - (this.maxY + this.minY) / 2);
@@ -114,11 +103,11 @@ public class SkillTabGui extends AbstractGui {
         RenderSystem.enableDepthTest();
         RenderSystem.translatef(0.0F, 0.0F, 950.0F);
         RenderSystem.colorMask(false, false, false, false);
-        fill(matrixStack, 4680, 2260, -4680, -2260, -16777216);
+        Draw.fill(matrixStack, 4680, 2260, -4680, -2260, -16777216);
         RenderSystem.colorMask(true, true, true, true);
         RenderSystem.translatef(0.0F, 0.0F, -950.0F);
         RenderSystem.depthFunc(518);
-        fill(matrixStack, 234, 113, 0, 0, -16777216);
+        Draw.fill(matrixStack, 234, 113, 0, 0, -16777216);
         RenderSystem.depthFunc(515);
         ResourceLocation resourcelocation = this.background;
         if (resourcelocation != null) {
@@ -138,9 +127,9 @@ public class SkillTabGui extends AbstractGui {
             }
         }
 
-        this.root.drawConnectivity(matrixStack, i, j, true);
-        this.root.drawConnectivity(matrixStack, i, j, false);
-        this.root.draw(matrixStack, i, j);
+        this.root.renderConnectivity(matrixStack, i, j, true);
+        this.root.renderConnectivity(matrixStack, i, j, false);
+        this.root.render(matrixStack, i, j);
         RenderSystem.depthFunc(518);
         RenderSystem.translatef(0.0F, 0.0F, -950.0F);
         RenderSystem.colorMask(false, false, false, false);
@@ -151,18 +140,21 @@ public class SkillTabGui extends AbstractGui {
         RenderSystem.popMatrix();
     }
 
-    public void drawTooltips(MatrixStack matrixStack, int p_238684_2_, int p_238684_3_, int p_238684_4_, int p_238684_5_) {
+    /**
+     * Render the tooltip on tab
+     */
+    public void renderTooltips(MatrixStack matrixStack, int xRelative, int yRelative, int xOffset, int yOffset) {
         RenderSystem.pushMatrix();
         RenderSystem.translatef(0.0F, 0.0F, 200.0F);
         Draw.fill(matrixStack, 0, 0, 234, 113, MathHelper.floor(this.fade * 255.0F) << 24);
         boolean flag = false;
         int x = MathHelper.floor(this.scrollX);
         int y = MathHelper.floor(this.scrollY);
-        if (p_238684_2_ > 0 && p_238684_2_ < 234 && p_238684_3_ > 0 && p_238684_3_ < 113) {
+        if (xRelative > 0 && xRelative < 234 && yRelative > 0 && yRelative < 113) {
             for (SkillEntryGui entryGui : this.widgets.values()) {
-                if (entryGui.isMouseOver(x, y, p_238684_2_, p_238684_3_)) {
+                if (entryGui.isMouseOver(x, y, xRelative, yRelative)) {
                     flag = true;
-                    entryGui.drawHover(matrixStack, x, y, this.fade, p_238684_4_, p_238684_5_);
+                    entryGui.renderHover(matrixStack, x, y, this.fade, xOffset, yOffset);
                     break;
                 }
             }
@@ -177,10 +169,11 @@ public class SkillTabGui extends AbstractGui {
 
     }
 
+    // gui controller
+
     public boolean isMouseOver(int p_195627_1_, int p_195627_2_, double p_195627_3_, double p_195627_5_) {
         return this.type.isMouseOver(p_195627_1_, p_195627_2_, this.index, p_195627_3_, p_195627_5_);
     }
-
 
     public void scroll(double dx, double dy) {
         if (this.maxX - this.minX > 234) {
@@ -192,25 +185,30 @@ public class SkillTabGui extends AbstractGui {
         }
     }
 
-    public void addSkill(SkillType skillType) {
-        SkillEntryGui SkillTypeEntryGui = new SkillEntryGui(this, this.minecraft, skillType);
-        this.addWidget(SkillTypeEntryGui, skillType);
+    // skill related
+
+    // update this bound region
+    private void updateRegion() {
+        for (SkillEntryGui entryGui : this.widgets.values()) {
+            int x0 = entryGui.getX();
+            int x1 = x0 + 28;
+            int y0 = entryGui.getY();
+            int y1 = y0 + 27;
+            this.minX = Math.min(this.minX, x0);
+            this.maxX = Math.max(this.maxX, x1);
+            this.minY = Math.min(this.minY, y0);
+            this.maxY = Math.max(this.maxY, y1);
+        }
     }
 
-    private void addWidget(SkillEntryGui entryGui, SkillType skillType) {
-        this.widgets.put(skillType, entryGui);
-        int i = entryGui.getX();
-        int j = i + 28;
-        int k = entryGui.getY();
-        int l = k + 27;
-        this.minX = Math.min(this.minX, i);
-        this.maxX = Math.max(this.maxX, j);
-        this.minY = Math.min(this.minY, k);
-        this.maxY = Math.max(this.maxY, l);
+    // getters
 
-        for (SkillEntryGui skillEntryGui : this.widgets.values()) {
-            skillEntryGui.attachToParent();
-        }
+    public int getPage() {
+        return page;
+    }
+
+    public ITextComponent getTitle() {
+        return this.title;
     }
 
     @Nullable

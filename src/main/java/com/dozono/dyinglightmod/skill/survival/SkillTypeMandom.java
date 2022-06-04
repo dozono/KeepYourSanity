@@ -17,10 +17,10 @@ import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 
 public class SkillTypeMandom extends SkillType {
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("56a11baf-7594-4ae8-8b9b-47c0370801f2");
-    public static final SkillTypeMandom INSTANCE = new SkillTypeMandom();
+    public static final SkillType INSTANCE = new SkillTypeMandom().setRegistryName("mandom");
 
     private SkillTypeMandom() {
-        super(Builder.create());
+        super(Builder.create().setIndex(0));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

@@ -16,9 +16,9 @@ public class SkillContainer {
     public SkillContainer(PlayerEntity entity) {
         playerEntity = entity;
         addSkill(SkillTypeLuck.INSTANCE);
-        addSkill(SkillTypeDisguise.Instance);
+        addSkill(SkillTypeDisguise.INSTANCE);
         addSkill(SkillTypePotionMaster.Instance);
-        addSkill(SkillTypeGastrosoph.Instance);
+        addSkill(SkillTypeGastrosoph.INSTANCE);
         addSkill(SkillTypeMandom.INSTANCE);
         addSkill(SkillTypeMender.Instance);
         addSkill(SkillTypeSmeltingMaster.Instance);

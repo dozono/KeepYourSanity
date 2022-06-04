@@ -1,5 +1,6 @@
 package com.dozono.dyinglightmod;
 
+import com.dozono.dyinglightmod.gui.SkillScreen;
 import com.dozono.dyinglightmod.monster.entities.EnhancedZombieEntity;
 import com.dozono.dyinglightmod.monster.items.CustomSpawnEggItem;
 import com.dozono.dyinglightmod.monster.model.EnhancedZombieModel;
@@ -7,8 +8,12 @@ import com.dozono.dyinglightmod.monster.renderer.EnhancedZombieRenderer;
 import com.dozono.dyinglightmod.skill.SkillContainer;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -19,6 +24,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -26,11 +32,13 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -44,6 +52,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.event.KeyEvent;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -52,6 +61,8 @@ public class DyingLight {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MODID = "dying_light";
+
+    private static KeyBinding skillKey;
 
     private static final DeferredRegister<EntityType<?>> ENTITY_REGISTER = DeferredRegister.create(ForgeRegistries.ENTITIES, MODID);
     private static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
@@ -127,7 +138,12 @@ public class DyingLight {
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
     }
 
+
     private void doClientStuff(final FMLClientSetupEvent event) {
+        skillKey = new KeyBinding("skill_key", KeyEvent.VK_K,DyingLight.MODID);
+
+        ClientRegistry.registerKeyBinding(skillKey);
+
         RenderingRegistry.registerEntityRenderingHandler(DyingLight.ENHANCED_ZOMBIE.get(), new IRenderFactory<EnhancedZombieEntity>() {
             @Override
             public EntityRenderer<? super EnhancedZombieEntity> createRenderFor(EntityRendererManager manager) {
@@ -158,6 +174,17 @@ public class DyingLight {
         LOGGER.info("HELLO from server starting");
     }
 
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) return;
+
+        while (skillKey.consumeClick()) {
+            Minecraft minecraft = Minecraft.getInstance();
+            ClientPlayerEntity player = minecraft.player;
+            SkillContainer skillContainer = player.getCapability(CapabilitySkillContainer).orElseThrow(() -> new RuntimeException());
+            minecraft.setScreen(new SkillScreen(skillContainer));
+        }
+    }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
