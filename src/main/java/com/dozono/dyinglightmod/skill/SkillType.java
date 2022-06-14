@@ -1,6 +1,5 @@
 package com.dozono.dyinglightmod.skill;
 
-import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -9,56 +8,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SkillType extends ForgeRegistryEntry<SkillType> implements IForgeRegistryEntry<SkillType> {
-    private final List<SkillType> dependencies;
-    private final SkillType parent;
-    /**
-     * The index will affect the texture u, v of this skill
-     */
-    private final int index;
+    private final List<SkillType> children;
+    private final List<SkillType> parents;
 
     public SkillType(Builder builder) {
-        this.dependencies = builder.deps;
-        this.parent = builder.parent;
-        this.index = builder.index;
+        this.parents = builder.parents;
+        this.children = new ArrayList<>();
+        for (SkillType parent : builder.parents) {
+            parent.children.add(this);
+        }
     }
 
-    public List<SkillType> getDependencies() {
-        return dependencies;
+    public List<SkillType> getChildren() {
+        return children;
     }
 
-    public SkillType getParent() {
-        return parent;
+    public List<SkillType> getParents() {
+        return parents;
     }
 
-    public int getIndex() {
-        return index;
+    public Skill createSkill() {
+        return new Skill(this);
     }
 
-    public abstract void mount(PlayerEntity playerEntity, Skill skill);
+    public void mount(PlayerEntity playerEntity, Skill skill) {}
 
-    public abstract void onLevelUp(PlayerEntity player, Skill skill);
+    public void onLevelUp(PlayerEntity player, Skill skill) {}
 
     public static class Builder {
-        private List<SkillType> deps = new ArrayList<>();
-        private SkillType parent;
-        private int index;
+        private final List<SkillType> parents = new ArrayList<>();
 
         public static Builder create() {
             return new Builder();
         }
 
-        public Builder setIndex(int index) {
-            this.index = index;
-            return this;
-        }
-
-        public Builder setParent(SkillType parent) {
-            this.parent = parent;
-            return this;
-        }
-
-        public Builder dependOn(SkillType skillType) {
-            deps.add(skillType);
+        public Builder addParent(SkillType parent) {
+            this.parents.add(parent);
             return this;
         }
     }

@@ -21,19 +21,10 @@ public class SkillTypeMiner extends SkillType {
     public static final SkillTypeMiner Instance = new SkillTypeMiner();
 
     public SkillTypeMiner() {
-        super(Builder.create());
+        super(Builder.create().addParent(SkillTypeToolMaster.Instance));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @Override
-    public void mount(PlayerEntity playerEntity, Skill skill) {
-
-    }
-
-    @Override
-    public void onLevelUp(PlayerEntity player, Skill skill) {
-
-    }
     @SubscribeEvent
     public void onMining(PlayerEvent.BreakSpeed event) {
 //        if (event.getPlayer().level.isClientSide) return;

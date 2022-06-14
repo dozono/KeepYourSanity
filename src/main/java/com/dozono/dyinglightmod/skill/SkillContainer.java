@@ -1,6 +1,6 @@
 package com.dozono.dyinglightmod.skill;
 
-import com.dozono.dyinglightmod.skill.combat.SkillTypeDisguise;
+import com.dozono.dyinglightmod.skill.combat.SkillTypeCamouflage;
 import com.dozono.dyinglightmod.skill.survival.*;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -16,7 +16,7 @@ public class SkillContainer {
     public SkillContainer(PlayerEntity entity) {
         playerEntity = entity;
         addSkill(SkillTypeLuck.INSTANCE);
-        addSkill(SkillTypeDisguise.INSTANCE);
+        addSkill(SkillTypeCamouflage.INSTANCE);
         addSkill(SkillTypePotionMaster.Instance);
         addSkill(SkillTypeGastrosoph.INSTANCE);
         addSkill(SkillTypeMandom.INSTANCE);
@@ -38,10 +38,10 @@ public class SkillContainer {
         type.mount(playerEntity, e);
     }
 
-    public Optional<Skill> getSkill(SkillType type) {
+    public <T extends Skill> Optional<T> getSkill(SkillType type) {
         for (Skill skill : skills) {
             if (skill.type == type) {
-                return Optional.of(skill);
+                return Optional.of((T) skill);
             }
         }
         return Optional.empty();

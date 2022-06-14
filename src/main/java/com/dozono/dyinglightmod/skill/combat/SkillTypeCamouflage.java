@@ -2,7 +2,6 @@ package com.dozono.dyinglightmod.skill.combat;
 
 import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
-import com.dozono.dyinglightmod.skill.survival.SkillTypeLuck;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,22 +11,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 
-public class SkillTypeDisguise extends SkillType {
-    public static final SkillTypeDisguise INSTANCE = new SkillTypeDisguise();
+public class SkillTypeCamouflage extends SkillType {
+    public static final SkillTypeCamouflage INSTANCE = new SkillTypeCamouflage();
 
-    private SkillTypeDisguise() {
-        super(Builder.create().dependOn(SkillTypeLuck.INSTANCE));
+    private SkillTypeCamouflage() {
+        super(Builder.create().addParent(SkillTypeProjectileDeflection.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    @Override
-    public void mount(PlayerEntity playerEntity, Skill skill) {
-
-    }
-
-    @Override
-    public void onLevelUp(PlayerEntity player, Skill skill) {
-
     }
 
     @SubscribeEvent

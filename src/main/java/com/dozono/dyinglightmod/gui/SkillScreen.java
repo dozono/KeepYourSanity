@@ -2,7 +2,7 @@ package com.dozono.dyinglightmod.gui;
 
 import com.dozono.dyinglightmod.DyingLight;
 import com.dozono.dyinglightmod.skill.SkillContainer;
-import com.dozono.dyinglightmod.skill.combat.SkillTypeDisguise;
+import com.dozono.dyinglightmod.skill.combat.SkillTypeCamouflage;
 import com.dozono.dyinglightmod.skill.survival.SkillTypeMandom;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -32,11 +32,11 @@ public class SkillScreen extends Screen {
                     new TranslationTextComponent(DyingLight.MODID + ".survival"),
                     new IconSprite(0, 0, 32, 32, SKILL_ICON_LOCATION),
                     new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),
-            SkillTabGui.create(Minecraft.getInstance(), this, 1, SkillTypeDisguise.INSTANCE,
+            SkillTabGui.create(Minecraft.getInstance(), this, 1, SkillTypeCamouflage.INSTANCE,
                     new TranslationTextComponent(DyingLight.MODID + ".combat"),
                     new IconSprite(64, 32, 32, 32, SKILL_ICON_LOCATION),
                     new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),
-            SkillTabGui.create(Minecraft.getInstance(), this, 2, SkillTypeDisguise.INSTANCE,
+            SkillTabGui.create(Minecraft.getInstance(), this, 2, SkillTypeCamouflage.INSTANCE,
                     new TranslationTextComponent(DyingLight.MODID + ".agility"),
                     new IconSprite(64, 0, 32, 32, SKILL_ICON_LOCATION),
                     new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png"))
@@ -148,11 +148,11 @@ public class SkillScreen extends Screen {
         this.minecraft.getTextureManager().bind(WINDOW_LOCATION);
         this.blit(matrixStack, x, y, 0, 0, 252, 140);
 
-//        this.minecraft.getTextureManager().bind(TABS_LOCATION);
-//        for (SkillTabGui drawTab : this.tabs) {
-//            if (drawTab.getPage() == tabPage)
-//                drawTab.renderTab(matrixStack, x, y, drawTab == this.selectedTab);
-//        }
+        this.minecraft.getTextureManager().bind(TABS_LOCATION);
+        for (SkillTabGui drawTab : this.tabs) {
+            if (drawTab.getPage() == tabPage)
+                drawTab.renderTab(matrixStack, x, y, drawTab == this.selectedTab);
+        }
 
         RenderSystem.enableRescaleNormal();
         RenderSystem.defaultBlendFunc();

@@ -45,7 +45,8 @@ public class SkillEntryGui {
         this.x = x;
         this.y = y;
 
-        int uOffset = this.skillType.getIndex() * ICON_DIMENSION;
+        int index = IconMapping.getIndex(this.skillType);
+        int uOffset = index * ICON_DIMENSION;
         if (uOffset + ICON_DIMENSION >= ICON_TEXTURE_DIMENSION) {
             int vIndex = (uOffset + ICON_DIMENSION) / ICON_TEXTURE_DIMENSION;
             this.v = vIndex * ICON_DIMENSION;
@@ -114,7 +115,7 @@ public class SkillEntryGui {
 //        this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
 //        this.blit(p_238688_1_, p_238688_2_ + this.x + 3, p_238688_3_ + this.y, this.display.getFrame().getTexture(), 128 + state.getIndex() * 26, 26, 26);
         this.minecraft.getTextureManager().bind(SKILL_ICON_LOCATION);
-        Draw.blit(matrixStack, x + this.x + 3, y + this.y, 24, 24, u, v, 32, 32, 256, 256);
+        Draw.blit(matrixStack, x + this.x + 3, y + this.y, 16, 16, u, v, 32, 32, 256, 256);
 
         for (SkillEntryGui entryGui : this.children) {
             entryGui.render(matrixStack, x, y);
@@ -164,7 +165,8 @@ public class SkillEntryGui {
         } else {
             sx = x + this.x;
         }
-
+        sx -= 1;
+        l -= 4;
         int height = 32 + this.description.size() * 9;
         if (!this.description.isEmpty()) {
             if (flag1) {
@@ -178,12 +180,12 @@ public class SkillEntryGui {
         Draw.blit(matrixStack, sx + k, l, 200 - k, 1 * 26, k, 26);
 //        Draw.blit(matrixStack, x + this.x + 3, y + this.y, this.display.getFrame().getTexture(), 128 + 1 * 26, 26, 26);
         if (flag) {
-            this.minecraft.font.drawShadow(matrixStack, this.title, (float) (sx + 5), (float) (y + this.y + 9), -1);
+            this.minecraft.font.drawShadow(matrixStack, this.title, (float) (sx + 5), (float) (l + 9), -1);
 //            if (s != null) {
 //                this.minecraft.font.drawShadow(matrixStack, s, (float) (x + this.x - i), (float) (y + this.y + 9), -1);
 //            }
         } else {
-            this.minecraft.font.drawShadow(matrixStack, this.title, (float) (sx + this.x + 32), (float) (y + this.y + 9), -1);
+            this.minecraft.font.drawShadow(matrixStack, this.title, (float) (sx + 25), (float) (l + 9), -1);
 //            if (s != null) {
 //                this.minecraft.font.drawShadow(matrixStack, s, (float) (x + this.x + this.width - i - 5), (float) (y + this.y + 9), -1);
 //            }
@@ -195,12 +197,12 @@ public class SkillEntryGui {
             }
         } else {
             for (int l1 = 0; l1 < this.description.size(); ++l1) {
-                this.minecraft.font.draw(matrixStack, this.description.get(l1), (float) (sx + 5), (float) (y + this.y + 9 + 17 + l1 * 9), -5592406);
+                this.minecraft.font.draw(matrixStack, this.description.get(l1), (float) (sx + 5), (float) (l + 9 + 17 + l1 * 9), -5592406);
             }
         }
 
         this.minecraft.getTextureManager().bind(SKILL_ICON_LOCATION);
-        Draw.blit(matrixStack, x + this.x + 3, y + this.y, 24, 24, u, v, 32, 32, 256, 256);
+        Draw.blit(matrixStack, x + this.x + 3, y + this.y, 16, 16, u, v, 32, 32, 256, 256);
     }
 
     protected void render9Sprite(MatrixStack matrixStack, int x, int y, int w, int h, int p_238691_6_, int p_238691_7_, int p_238691_8_, int p_238691_9_, int p_238691_10_) {
@@ -233,12 +235,12 @@ public class SkillEntryGui {
 //    public void setProgress(SkillTypeProgress p_191824_1_) {
 //        this.progress = p_191824_1_;
 //    }
-
-    @Nullable
-    private SkillEntryGui getFirstVisibleParent(SkillType skillType) {
-        skillType = skillType.getParent();
-        return skillType != null ? this.tab.getWidget(skillType) : null;
-    }
+//
+//    @Nullable
+//    private SkillEntryGui getFirstVisibleParent(SkillType skillType) {
+//        skillType = skillType.getParents();
+//        return skillType != null ? this.tab.getWidget(skillType) : null;
+//    }
 
     public boolean isMouseOver(int p_191816_1_, int p_191816_2_, int p_191816_3_, int p_191816_4_) {
         int i = p_191816_1_ + this.x;

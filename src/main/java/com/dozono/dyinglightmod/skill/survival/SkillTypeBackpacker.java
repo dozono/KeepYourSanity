@@ -8,7 +8,7 @@ public class SkillTypeBackpacker extends SkillType {
     public static final SkillType INSTANCE = new SkillTypeBackpacker().setRegistryName("backpacker");
 
     public SkillTypeBackpacker() {
-        super(Builder.create());
+        super(Builder.create().addParent(SkillTypeMandom.INSTANCE));
     }
 
     @Override

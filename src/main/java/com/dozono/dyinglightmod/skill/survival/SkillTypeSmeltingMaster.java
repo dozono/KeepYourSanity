@@ -28,19 +28,10 @@ public class SkillTypeSmeltingMaster extends SkillType {
     public static final SkillTypeSmeltingMaster Instance = new SkillTypeSmeltingMaster();
 
     public SkillTypeSmeltingMaster() {
-        super(Builder.create());
+        super(Builder.create().addParent(SkillTypeMender.Instance));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @Override
-    public void mount(PlayerEntity playerEntity, Skill skill) {
-
-    }
-
-    @Override
-    public void onLevelUp(PlayerEntity player, Skill skill) {
-
-    }
     @SubscribeEvent
     public void tick(TickEvent.PlayerTickEvent event) {
         PlayerEntity player = event.player;

@@ -78,7 +78,6 @@ public class SkillTabGui {
         this.type.draw(matrixStack, x, y, selected, this.index);
         int i = screen.width;
         int j = screen.height;
-        Draw.blit(matrixStack, x, y, i, j, getScreen().width, getScreen().height);
     }
 
     /**

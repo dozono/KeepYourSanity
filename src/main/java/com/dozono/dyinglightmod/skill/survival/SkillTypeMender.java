@@ -23,18 +23,8 @@ public class SkillTypeMender extends SkillType {
     public static final SkillTypeMender Instance = new SkillTypeMender();
 
     public SkillTypeMender() {
-        super(Builder.create());
+        super(Builder.create().addParent(SkillTypeGastrosoph.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    @Override
-    public void mount(PlayerEntity playerEntity, Skill skill) {
-
-    }
-
-    @Override
-    public void onLevelUp(PlayerEntity player, Skill skill) {
-
     }
 
     @SubscribeEvent

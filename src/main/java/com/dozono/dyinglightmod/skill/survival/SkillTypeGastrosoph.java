@@ -17,18 +17,8 @@ public class SkillTypeGastrosoph extends SkillType {
     public static final SkillType INSTANCE = new SkillTypeGastrosoph().setRegistryName("gastrosoph");
 
     private SkillTypeGastrosoph() {
-        super(Builder.create().setIndex(0));
+        super(Builder.create().addParent(SkillTypeMandom.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    @Override
-    public void mount(PlayerEntity playerEntity, Skill skill) {
-
-    }
-
-    @Override
-    public void onLevelUp(PlayerEntity player, Skill skill) {
-
     }
 
     @SubscribeEvent

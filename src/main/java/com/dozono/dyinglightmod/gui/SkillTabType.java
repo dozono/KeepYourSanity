@@ -68,7 +68,7 @@ enum SkillTabType {
                 j += 5;
         }
 
-        Draw.blit(matrixStack, i, j, 24, 24, sprite.u, sprite.v, sprite.w, sprite.h, 256, 256);
+        Draw.blit(matrixStack, i, j, 16, 16, sprite.u, sprite.v, sprite.w, sprite.h, 256, 256);
     }
 
     public int getX(int index) {

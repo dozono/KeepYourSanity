@@ -20,16 +20,8 @@ public class SkillTypeMandom extends SkillType {
     public static final SkillType INSTANCE = new SkillTypeMandom().setRegistryName("mandom");
 
     private SkillTypeMandom() {
-        super(Builder.create().setIndex(0));
+        super(Builder.create());
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    @Override
-    public void mount(PlayerEntity playerEntity, Skill skill) {
-//        if (playerEntity.level.isClientSide) {
-//            return;
-//        }
-//        updateMaxHealth(playerEntity, skill);
     }
 
     @Override
@@ -43,18 +35,20 @@ public class SkillTypeMandom extends SkillType {
     public void updateMaxHealth(PlayerEntity player, Skill skill) {
         ModifiableAttributeInstance attribute = player.getAttribute(Attributes.MAX_HEALTH);
         int additionalHealth = skill.getLevel() * 20;
+        if (attribute != null) {
 
-        AttributeModifier modifier = attribute.getModifier(MAX_HEALTH_UUID);
-        if (modifier == null || modifier.getAmount() != additionalHealth) {
-            if (modifier != null) {
-                attribute.removeModifier(modifier);
+            AttributeModifier modifier = attribute.getModifier(MAX_HEALTH_UUID);
+            if (modifier == null || modifier.getAmount() != additionalHealth) {
+                if (modifier != null) {
+                    attribute.removeModifier(modifier);
+                }
+                attribute.addTransientModifier(new AttributeModifier("skill_additional_health",
+                        additionalHealth, AttributeModifier.Operation.ADDITION));
             }
-            attribute.addPermanentModifier(new AttributeModifier("skill_additional_health",
-                    additionalHealth, AttributeModifier.Operation.ADDITION));
         }
     }
 
-//    @SubscribeEvent
+    //    @SubscribeEvent
 //    public void onPlayerJoin(PlayerEvent.PlayerRespawnEvent event) {
 //        PlayerEntity player = event.getPlayer();
 //        if (player.level.isClientSide) return;

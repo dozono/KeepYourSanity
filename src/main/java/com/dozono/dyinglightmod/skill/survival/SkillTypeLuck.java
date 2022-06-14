@@ -15,18 +15,8 @@ public class SkillTypeLuck extends SkillType {
     public static final SkillTypeLuck INSTANCE = new SkillTypeLuck();
 
     private SkillTypeLuck() {
-        super(Builder.create());
+        super(Builder.create().addParent(SkillTypeMandom.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    @Override
-    public void mount(PlayerEntity playerEntity, Skill skill) {
-
-    }
-
-    @Override
-    public void onLevelUp(PlayerEntity player, Skill skill) {
-
     }
 
     @SubscribeEvent

@@ -17,7 +17,7 @@ public class SkillTypeToolMaster extends SkillType {
     public static final SkillTypeToolMaster Instance = new SkillTypeToolMaster();
 
     public SkillTypeToolMaster() {
-        super(Builder.create());
+        super(Builder.create().addParent(SkillTypeBackpacker.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -38,7 +38,6 @@ public class SkillTypeToolMaster extends SkillType {
             Optional<Skill> skill = c.getSkill(this);
             if (skill.isPresent()) {
                 event.getPlayer().getMainHandItem().setDamageValue(0);
-
             }
         });
     }

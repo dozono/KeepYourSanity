@@ -27,18 +27,8 @@ public class SkillTypeLumberman extends SkillType {
     public static final SkillTypeLumberman Instance = new SkillTypeLumberman();
 
     public SkillTypeLumberman() {
-        super(Builder.create());
+        super(Builder.create().addParent(SkillTypeToolMaster.Instance));
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    @Override
-    public void mount(PlayerEntity playerEntity, Skill skill) {
-
-    }
-
-    @Override
-    public void onLevelUp(PlayerEntity player, Skill skill) {
-
     }
 
     @SubscribeEvent

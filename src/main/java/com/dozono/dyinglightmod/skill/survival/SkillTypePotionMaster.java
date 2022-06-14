@@ -17,20 +17,10 @@ public class SkillTypePotionMaster extends SkillType {
     public static final SkillTypePotionMaster Instance = new SkillTypePotionMaster();
 
     public SkillTypePotionMaster() {
-        super(Builder.create().setIndex(10));
+        super(Builder.create().addParent(SkillTypeSmeltingMaster.Instance));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @Override
-    public void mount(PlayerEntity playerEntity, Skill skill) {
-
-    }
-
-
-    @Override
-    public void onLevelUp(PlayerEntity player, Skill skill) {
-
-    }
     @SubscribeEvent
     public void onGettingPotionEffect(PotionEvent.PotionAddedEvent event) {
         LivingEntity entityLiving = event.getEntityLiving();
