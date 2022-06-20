@@ -1,5 +1,8 @@
 package com.dozono.dyinglightmod.skill;
 
+import com.dozono.dyinglightmod.skill.agility.SkillTypeDoubleJump;
+import com.dozono.dyinglightmod.skill.agility.SkillTypeRunner;
+import com.dozono.dyinglightmod.skill.agility.SkillTypeSwimmer;
 import com.dozono.dyinglightmod.skill.combat.SkillTypeCamouflage;
 import com.dozono.dyinglightmod.skill.survival.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,17 +18,21 @@ public class SkillContainer {
 
     public SkillContainer(PlayerEntity entity) {
         playerEntity = entity;
-        addSkill(SkillTypeLuck.INSTANCE);
-        addSkill(SkillTypeCamouflage.INSTANCE);
-        addSkill(SkillTypePotionMaster.Instance);
-        addSkill(SkillTypeGastrosoph.INSTANCE);
-        addSkill(SkillTypeMandom.INSTANCE);
-        addSkill(SkillTypeMender.Instance);
-        addSkill(SkillTypeSmeltingMaster.Instance);
-        //w8ing for test
-        addSkill(SkillTypeToolMaster.Instance);
-        addSkill(SkillTypeMiner.Instance);
-        addSkill(SkillTypeLumberman.Instance);
+//        addSkill(SkillTypeLuck.INSTANCE);
+//        addSkill(SkillTypeCamouflage.INSTANCE);
+//        addSkill(SkillTypePotionMaster.Instance);
+//        addSkill(SkillTypeGastrosoph.INSTANCE);
+//        addSkill(SkillTypeMandom.INSTANCE);
+//        addSkill(SkillTypeMender.Instance);
+//        addSkill(SkillTypeSmeltingMaster.Instance);
+//        //w8ing for test
+//        addSkill(SkillTypeToolMaster.Instance);
+//        addSkill(SkillTypeMiner.Instance);
+//        addSkill(SkillTypeLumberman.Instance);
+
+        addSkill(SkillTypeDoubleJump.INSTANCE);
+        addSkill(SkillTypeRunner.INSTANCE);
+        addSkill(SkillTypeSwimmer.INSTANCE);
     }
 
     public void upgrade() {
@@ -33,7 +40,7 @@ public class SkillContainer {
     }
 
     public void addSkill(SkillType type) {
-        Skill e = new Skill(type);
+        Skill e = type.createSkill();
         skills.add(e);
         type.mount(playerEntity, e);
     }

@@ -2,6 +2,7 @@ package com.dozono.dyinglightmod.gui;
 
 import com.dozono.dyinglightmod.DyingLight;
 import com.dozono.dyinglightmod.skill.SkillContainer;
+import com.dozono.dyinglightmod.skill.agility.SkillTypeDoubleJump;
 import com.dozono.dyinglightmod.skill.combat.SkillTypeCamouflage;
 import com.dozono.dyinglightmod.skill.survival.SkillTypeMandom;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -36,7 +37,7 @@ public class SkillScreen extends Screen {
                     new TranslationTextComponent(DyingLight.MODID + ".combat"),
                     new IconSprite(64, 32, 32, 32, SKILL_ICON_LOCATION),
                     new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),
-            SkillTabGui.create(Minecraft.getInstance(), this, 2, SkillTypeCamouflage.INSTANCE,
+            SkillTabGui.create(Minecraft.getInstance(), this, 2, SkillTypeDoubleJump.INSTANCE,
                     new TranslationTextComponent(DyingLight.MODID + ".agility"),
                     new IconSprite(64, 0, 32, 32, SKILL_ICON_LOCATION),
                     new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png"))

@@ -6,11 +6,11 @@ import com.dozono.dyinglightmod.monster.items.CustomSpawnEggItem;
 import com.dozono.dyinglightmod.monster.model.EnhancedZombieModel;
 import com.dozono.dyinglightmod.monster.renderer.EnhancedZombieRenderer;
 import com.dozono.dyinglightmod.skill.SkillContainer;
+import com.dozono.dyinglightmod.skill.agility.DoubleJumpMessage;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.settings.KeyBinding;
@@ -24,7 +24,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -45,6 +44,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
@@ -61,6 +62,13 @@ public class DyingLight {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MODID = "dying_light";
+    private static final String Version = "1";
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
+            new ResourceLocation(MODID, "network_channel"),
+            () -> Version,
+            Version::equals,
+            Version::equals
+    );
 
     private static KeyBinding skillKey;
 
@@ -108,6 +116,7 @@ public class DyingLight {
     }
 
     public DyingLight() {
+        CHANNEL.registerMessage(1, DoubleJumpMessage.class, DoubleJumpMessage::encode, DoubleJumpMessage::decode, DoubleJumpMessage::handle);
 
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -140,7 +149,7 @@ public class DyingLight {
 
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        skillKey = new KeyBinding("skill_key", KeyEvent.VK_K,DyingLight.MODID);
+        skillKey = new KeyBinding("skill_key", KeyEvent.VK_K, DyingLight.MODID);
 
         ClientRegistry.registerKeyBinding(skillKey);
 
