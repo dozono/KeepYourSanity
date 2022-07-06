@@ -13,13 +13,16 @@ import net.minecraft.util.text.ITextComponent;
 import javax.annotation.Nullable;
 import java.util.Map;
 
+import static com.dozono.dyinglightmod.gui.SkillScreen.SKILL_ICON_LOCATION;
+
 public class SkillTabGui {
     private final Minecraft minecraft;
     private final SkillScreen screen;
     private final SkillTabType type;
     private final int index;
     private final ITextComponent title;
-    private final IconSprite iconSprite;
+    private final int iconU;
+    private final int iconV;
     private final ResourceLocation background;
 
     private final SkillEntryGui root;
@@ -38,29 +41,30 @@ public class SkillTabGui {
     public SkillTabGui(Minecraft mc,
                        SkillScreen screen,
                        SkillTabType type,
-                       int index,
+                       int tabIndex,
                        SkillType skillType,
                        ITextComponent title,
-                       IconSprite iconSprite,
                        ResourceLocation background) {
         this.minecraft = mc;
         this.screen = screen;
         this.type = type;
-        this.index = index;
-        this.root = SkillEntryGuiCalculator.compute(mc, this, skillType, widgets);
-
-        this.iconSprite = iconSprite;
+        this.index = tabIndex;
+        this.root = SkillEntryHelper.createSkillGuiTree(mc, this, skillType, widgets);
+        int[] iconUV = SkillEntryHelper.getIconUV(skillType);
+        this.iconU = iconUV[0];
+        this.iconV = iconUV[1];
         this.background = background;
         this.title = title;
 
         this.updateRegion();
     }
 
+
     public static SkillTabGui create(Minecraft minecraft, SkillScreen screen, int index, SkillType skillType,
-                                     ITextComponent title, IconSprite icon, ResourceLocation backgroundTexture) {
+                                     ITextComponent title, ResourceLocation backgroundTexture) {
         for (SkillTabType tabType : SkillTabType.values()) {
             if ((index % SkillTabType.MAX_TABS) < tabType.getMax()) {
-                return new SkillTabGui(minecraft, screen, tabType, index, skillType, title, icon, backgroundTexture);
+                return new SkillTabGui(minecraft, screen, tabType, index, skillType, title, backgroundTexture);
             }
 
             index -= tabType.getMax();
@@ -84,8 +88,8 @@ public class SkillTabGui {
      * Render the icon on tab
      */
     public void renderIcon(MatrixStack matrixStack, int x, int y) {
-        this.minecraft.textureManager.bind(this.iconSprite.location);
-        this.type.drawIcon(matrixStack, x, y, this.index, this.iconSprite);
+        this.minecraft.getTextureManager().bind(SKILL_ICON_LOCATION);
+        this.type.drawIcon(matrixStack, x, y, this.index, this.iconU, iconV);
     }
 
     /**
@@ -93,8 +97,8 @@ public class SkillTabGui {
      */
     public void renderContents(MatrixStack matrixStack) {
         if (!this.centered) {
-            this.scrollX = (double) (117 - (this.maxX + this.minX) / 2);
-            this.scrollY = (double) (56 - (this.maxY + this.minY) / 2);
+            this.scrollX = 117 - (this.maxX + this.minX) / 2;
+            this.scrollY = 56 - (this.maxY + this.minY) / 2;
             this.centered = true;
         }
 
@@ -184,15 +188,23 @@ public class SkillTabGui {
         }
     }
 
+    public double getScrollX() {
+        return scrollX;
+    }
+
+    public double getScrollY() {
+        return scrollY;
+    }
+
     // skill related
 
     // update this bound region
     private void updateRegion() {
         for (SkillEntryGui entryGui : this.widgets.values()) {
             int x0 = entryGui.getX();
-            int x1 = x0 + 28;
+            int x1 = x0 + 32;
             int y0 = entryGui.getY();
-            int y1 = y0 + 27;
+            int y1 = y0 + 32;
             this.minX = Math.min(this.minX, x0);
             this.maxX = Math.max(this.maxX, x1);
             this.minY = Math.min(this.minY, y0);
@@ -213,6 +225,10 @@ public class SkillTabGui {
     @Nullable
     public SkillEntryGui getWidget(SkillType skillType) {
         return this.widgets.get(skillType);
+    }
+
+    public Map<SkillType, SkillEntryGui> getWidgets() {
+        return widgets;
     }
 
     public SkillScreen getScreen() {

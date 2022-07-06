@@ -27,7 +27,7 @@ public class SkillTypeMarksmanship extends SkillType {
 
     public SkillTypeMarksmanship() {
 
-        super(Builder.create());
+        super(Builder.create().addParent(SkillTypeTBD.INSTACE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

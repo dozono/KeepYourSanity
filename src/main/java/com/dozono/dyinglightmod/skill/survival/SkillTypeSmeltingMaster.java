@@ -2,7 +2,6 @@ package com.dozono.dyinglightmod.skill.survival;
 
 import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -11,10 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +21,10 @@ import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 
 public class SkillTypeSmeltingMaster extends SkillType {
 
-    public static final SkillTypeSmeltingMaster Instance = new SkillTypeSmeltingMaster();
+    public static final SkillTypeSmeltingMaster INSTANCE = new SkillTypeSmeltingMaster();
 
     public SkillTypeSmeltingMaster() {
-        super(Builder.create().addParent(SkillTypeMender.Instance));
+        super(Builder.create().addParent(SkillTypeMender.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

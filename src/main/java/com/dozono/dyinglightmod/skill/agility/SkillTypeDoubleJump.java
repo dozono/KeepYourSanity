@@ -3,9 +3,8 @@ package com.dozono.dyinglightmod.skill.agility;
 import com.dozono.dyinglightmod.DyingLight;
 import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
-import net.minecraft.client.Minecraft;
+import com.dozono.dyinglightmod.skill.combat.SkillTypeTBD;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
@@ -24,9 +23,7 @@ public class SkillTypeDoubleJump extends SkillType {
     public static final SkillTypeDoubleJump INSTANCE = new SkillTypeDoubleJump();
 
     public SkillTypeDoubleJump() {
-
-        super(Builder.create());
-        this.setRegistryName("doublejump");
+        super(Builder.create().addParent(SkillTypeTBD.INSTACE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -35,14 +32,14 @@ public class SkillTypeDoubleJump extends SkillType {
         public int doubleJumpDelay;
         public boolean releaseJump = false;
 
-        public DoubleJumpSkill(SkillType type) {
-            super(type);
+        public DoubleJumpSkill(SkillType type,PlayerEntity player) {
+            super(type,player);
         }
     }
 
     @Override
-    public Skill createSkill() {
-        return new DoubleJumpSkill(this);
+    public Skill createSkill(PlayerEntity player) {
+        return new DoubleJumpSkill(this,player);
     }
 
     @SubscribeEvent

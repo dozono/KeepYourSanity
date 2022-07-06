@@ -23,13 +23,10 @@ public class SkillTypeLuck extends SkillType {
     public void onGettingExp(PlayerXpEvent.PickupXp event) {
         PlayerEntity player = event.getPlayer();
         if (player.level.isClientSide) return;
-        player.getCapability(CapabilitySkillContainer).ifPresent((c) -> {
-            Optional<Skill> skill = c.getSkill(this);
-            if (skill.isPresent()) {
-                Skill luck = skill.get();
-                event.getOrb().value *= luck.getLevel();
-                ;
-            }
-        });
+        Optional<Skill> skill = this.getSkill(player);
+        if (skill.isPresent() && skill.get().getLevel() > 0) {
+            Skill luck = skill.get();
+            event.getOrb().value *= luck.getLevel();
+        }
     }
 }

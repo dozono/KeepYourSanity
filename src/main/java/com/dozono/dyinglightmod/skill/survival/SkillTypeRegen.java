@@ -3,10 +3,8 @@ package com.dozono.dyinglightmod.skill.survival;
 import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -16,7 +14,7 @@ public class SkillTypeRegen extends SkillType {
     public static final SkillTypeRegen INSTANCE = new SkillTypeRegen();
 
     private SkillTypeRegen() {
-        super(Builder.create().addParent(SkillTypePotionMaster.Instance).addParent(SkillTypeToolMaster.Instance));
+        super(Builder.create().addParent(SkillTypePotionMaster.INSTANCE).addParent(SkillTypeToolMaster.Instance));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -25,10 +23,6 @@ public class SkillTypeRegen extends SkillType {
 
     }
 
-    @Override
-    public void onLevelUp(PlayerEntity player, Skill skill) {
-
-    }
 
     //TODO:xie zai PlayerTickEvent limian
     @SubscribeEvent

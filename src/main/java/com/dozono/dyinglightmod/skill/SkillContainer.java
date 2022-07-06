@@ -1,48 +1,43 @@
 package com.dozono.dyinglightmod.skill;
 
+import com.dozono.dyinglightmod.DyingLight;
 import com.dozono.dyinglightmod.skill.agility.SkillTypeDoubleJump;
 import com.dozono.dyinglightmod.skill.agility.SkillTypeRunner;
 import com.dozono.dyinglightmod.skill.agility.SkillTypeSwimmer;
-import com.dozono.dyinglightmod.skill.combat.SkillTypeCamouflage;
-import com.dozono.dyinglightmod.skill.survival.*;
+import com.dozono.dyinglightmod.skill.agility.SkillTypeAquaMan;
+import com.dozono.dyinglightmod.skill.combat.SkillTypeDeathDenied;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class SkillContainer {
+import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
+
+public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
     private final List<Skill> skills = new ArrayList<>();
     private final PlayerEntity playerEntity;
 
-    public SkillContainer(PlayerEntity entity) {
-        playerEntity = entity;
-//        addSkill(SkillTypeLuck.INSTANCE);
-//        addSkill(SkillTypeCamouflage.INSTANCE);
-//        addSkill(SkillTypePotionMaster.Instance);
-//        addSkill(SkillTypeGastrosoph.INSTANCE);
-//        addSkill(SkillTypeMandom.INSTANCE);
-//        addSkill(SkillTypeMender.Instance);
-//        addSkill(SkillTypeSmeltingMaster.Instance);
-//        //w8ing for test
-//        addSkill(SkillTypeToolMaster.Instance);
-//        addSkill(SkillTypeMiner.Instance);
-//        addSkill(SkillTypeLumberman.Instance);
+    public SkillContainer(PlayerEntity player) {
+        playerEntity = player;
 
-        addSkill(SkillTypeDoubleJump.INSTANCE);
-        addSkill(SkillTypeRunner.INSTANCE);
-        addSkill(SkillTypeSwimmer.INSTANCE);
-    }
+        Collection<SkillType> allSkills = DyingLight.SKILL_REGISTRY.get().getValues();
+        List<SkillType> roots = allSkills.stream().filter(s -> s.getParents().size() == 0).collect(Collectors.toList());
 
-    public void upgrade() {
-
-    }
-
-    public void addSkill(SkillType type) {
-        Skill e = type.createSkill();
-        skills.add(e);
-        type.mount(playerEntity, e);
+        for (SkillType type : allSkills) {
+            Skill e = type.createSkill(player);
+            skills.add(e);
+            type.mount(playerEntity, e);
+        }
     }
 
     public <T extends Skill> Optional<T> getSkill(SkillType type) {
@@ -57,5 +52,30 @@ public class SkillContainer {
     @Nonnull
     public List<Skill> getRoots() {
         return skills;
+    }
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        if (cap == CapabilitySkillContainer) {
+            return (LazyOptional<T>) LazyOptional.of(() -> this);
+        }
+        return LazyOptional.empty();
+    }
+
+    @Override
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = new CompoundNBT();
+        for (Skill skill : this.skills) {
+            skill.type.writeNBT(nbt, skill);
+        }
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundNBT nbt) {
+        for (Skill skill : this.skills) {
+            skill.type.readNBT(nbt, skill);
+        }
     }
 }

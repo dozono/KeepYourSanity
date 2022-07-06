@@ -8,6 +8,7 @@ import com.dozono.dyinglightmod.skill.survival.SkillTypeMandom;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -21,27 +22,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class SkillScreen extends Screen {
     public static final ResourceLocation SKILL_ICON_LOCATION = new ResourceLocation(DyingLight.MODID, "textures/gui/skill.png");
-
     private static final ResourceLocation WINDOW_LOCATION = new ResourceLocation("textures/gui/advancements/window.png");
     private static final ResourceLocation TABS_LOCATION = new ResourceLocation("textures/gui/advancements/tabs.png");
     private static final ITextComponent VERY_SAD_LABEL = new TranslationTextComponent("advancements.sad_label");
     private static final ITextComponent NO_ADVANCEMENTS_LABEL = new TranslationTextComponent("advancements.empty");
     private static final ITextComponent TITLE = new TranslationTextComponent("skill.skill_tab");
+
     private final SkillContainer container; // capability
-    private final SkillTabGui[] tabs = new SkillTabGui[]{
-            SkillTabGui.create(Minecraft.getInstance(), this, 0, SkillTypeMandom.INSTANCE,
-                    new TranslationTextComponent(DyingLight.MODID + ".survival"),
-                    new IconSprite(0, 0, 32, 32, SKILL_ICON_LOCATION),
-                    new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),
-            SkillTabGui.create(Minecraft.getInstance(), this, 1, SkillTypeCamouflage.INSTANCE,
-                    new TranslationTextComponent(DyingLight.MODID + ".combat"),
-                    new IconSprite(64, 32, 32, 32, SKILL_ICON_LOCATION),
-                    new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),
-            SkillTabGui.create(Minecraft.getInstance(), this, 2, SkillTypeDoubleJump.INSTANCE,
-                    new TranslationTextComponent(DyingLight.MODID + ".agility"),
-                    new IconSprite(64, 0, 32, 32, SKILL_ICON_LOCATION),
-                    new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png"))
-    };
+    private final SkillTabGui[] tabs;
     private SkillTabGui selectedTab;
     private boolean isScrolling;
     private static int tabPage, maxPages;
@@ -49,6 +37,20 @@ public class SkillScreen extends Screen {
     public SkillScreen(SkillContainer container) {
         super(NarratorChatListener.NO_TITLE);
         this.container = container;
+        tabs = new SkillTabGui[]{
+                SkillTabGui.create(Minecraft.getInstance(), this, 0, SkillTypeMandom.INSTANCE,
+                        new TranslationTextComponent(DyingLight.MODID + ".survival"),
+//                        new IconSprite(0, 0, 32, 32, SKILL_ICON_LOCATION),
+                        new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),
+                SkillTabGui.create(Minecraft.getInstance(), this, 1, SkillTypeCamouflage.INSTANCE,
+                        new TranslationTextComponent(DyingLight.MODID + ".combat"),
+//                        new IconSprite(64, 32, 32, 32, SKILL_ICON_LOCATION),
+                        new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),
+                SkillTabGui.create(Minecraft.getInstance(), this, 2, SkillTypeDoubleJump.INSTANCE,
+                        new TranslationTextComponent(DyingLight.MODID + ".agility"),
+//                        new IconSprite(64, 0, 32, 32, SKILL_ICON_LOCATION),
+                        new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png"))
+        };
     }
 
     protected void init() {
@@ -59,6 +61,11 @@ public class SkillScreen extends Screen {
             addButton(new Button(guiLeft, guiTop - 50, 20, 20, new StringTextComponent("<"), b -> tabPage = Math.max(tabPage - 1, 0)));
             addButton(new Button(guiLeft + 252 - 20, guiTop - 50, 20, 20, new StringTextComponent(">"), b -> tabPage = Math.min(tabPage + 1, maxPages)));
             maxPages = this.tabs.length / SkillTabType.MAX_TABS;
+        }
+        for (SkillTabGui tab : tabs) {
+            for (SkillEntryGui value : tab.getWidgets().values()) {
+                this.addWidget(value);
+            }
         }
     }
 
@@ -109,6 +116,8 @@ public class SkillScreen extends Screen {
         this.renderInside(matrixStack, x, y, i, j);
         this.renderWindow(matrixStack, i, j);
         this.renderTooltips(matrixStack, x, y, i, j);
+
+
     }
 
     public boolean mouseDragged(double x, double y, int btnIndex, double dx, double dy) {

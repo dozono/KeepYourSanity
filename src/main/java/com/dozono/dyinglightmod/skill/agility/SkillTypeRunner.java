@@ -1,6 +1,7 @@
 package com.dozono.dyinglightmod.skill.agility;
 
 import com.dozono.dyinglightmod.skill.SkillType;
+import com.dozono.dyinglightmod.skill.combat.SkillTypeTBD;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
@@ -18,8 +19,7 @@ import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 public class SkillTypeRunner extends SkillType {
 
     public SkillTypeRunner() {
-        super(Builder.create());
-        this.setRegistryName("runner");
+        super(Builder.create().addParent(SkillTypeTBD.INSTACE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -35,10 +35,9 @@ public class SkillTypeRunner extends SkillType {
             ModifiableAttributeInstance attribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
             if (attribute != null) {
                 if (player.isSprinting()) {
-                    double value = attribute.getValue();
                     AttributeModifier existed = attribute.getModifier(uuid);
                     if (existed == null) {
-                        attribute.addTransientModifier(new AttributeModifier(uuid, "sprint_speed", value / 2, AttributeModifier.Operation.ADDITION));
+                        attribute.addTransientModifier(new AttributeModifier(uuid, "sprint_speed", (float)skill.getLevel()/2.5f, AttributeModifier.Operation.MULTIPLY_TOTAL));
                     }
                 } else {
                     attribute.removeModifier(uuid);

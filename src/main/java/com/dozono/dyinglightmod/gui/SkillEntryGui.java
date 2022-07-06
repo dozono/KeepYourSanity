@@ -1,15 +1,22 @@
 package com.dozono.dyinglightmod.gui;
 
+import com.dozono.dyinglightmod.DyingLight;
+import com.dozono.dyinglightmod.skill.Skill;
+import com.dozono.dyinglightmod.skill.SkillLevelUpMessage;
 import com.dozono.dyinglightmod.skill.SkillType;
+import com.dozono.dyinglightmod.skill.survival.SkillTypeMandom;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import java.util.List;
-import javax.annotation.Nullable;
+import java.util.Optional;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -17,9 +24,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import static com.dozono.dyinglightmod.gui.SkillScreen.SKILL_ICON_LOCATION;
 
 @OnlyIn(Dist.CLIENT)
-public class SkillEntryGui {
-    public static final int ICON_DIMENSION = 34;
-    public static final int ICON_TEXTURE_DIMENSION = 272;
+public class SkillEntryGui implements IGuiEventListener {
+    public static final int ICON_DIMENSION = 32;
+    public static final int ICON_TEXTURE_DIMENSION = 256;
 
     private final SkillTabGui tab;
     private final SkillType skillType;
@@ -34,29 +41,30 @@ public class SkillEntryGui {
     private int y = 0;
     private int u = 0;
     private int v = 0;
+    Skill skill;
 
-    public SkillEntryGui(Minecraft minecraft, SkillTabGui tab, SkillType skillType, List<SkillEntryGui> children, int x, int y) {
+    public SkillEntryGui(Minecraft minecraft, SkillTabGui tab, SkillType skillType, int x, int y, int u, int v, List<SkillEntryGui> children) {
+        if (minecraft.player != null) {
+            minecraft.player.getCapability(DyingLight.CapabilitySkillContainer).ifPresent(c -> {
+                c.getSkill(skillType).ifPresent(s -> {
+                    skill = s;
+                });
+            });
+        }
         this.tab = tab;
         this.skillType = skillType;
         this.minecraft = minecraft;
         this.children = children;
-        TranslationTextComponent title = new TranslationTextComponent("dylinglight.skill." + skillType.getRegistryName() + ".title");
+        TranslationTextComponent title = new TranslationTextComponent("dylinglight.skill." + skillType.getRegistryName().getPath() + ".title");
         this.title = LanguageMap.getInstance().getVisualOrder(minecraft.font.substrByWidth(title, 163));
+
         this.x = x;
         this.y = y;
-
-        int index = IconMapping.getIndex(this.skillType);
-        int uOffset = index * ICON_DIMENSION;
-        if (uOffset + ICON_DIMENSION >= ICON_TEXTURE_DIMENSION) {
-            int vIndex = (uOffset + ICON_DIMENSION) / ICON_TEXTURE_DIMENSION;
-            this.v = vIndex * ICON_DIMENSION;
-            this.u = (uOffset + ICON_DIMENSION) % ICON_TEXTURE_DIMENSION;
-        } else {
-            this.u = uOffset;
-        }
+        this.u = u;
+        this.v = v;
 
         int l = 29 + minecraft.font.width(this.title);
-        TranslationTextComponent description = new TranslationTextComponent("dylinglight.skill." + skillType.getRegistryName() + ".description");
+        TranslationTextComponent description = new TranslationTextComponent("dylinglight.skill." + skillType.getRegistryName().getPath() + ".description");
         this.description = LanguageMap.getInstance().getVisualOrder(TextComponentUtil.splitOptimalLines(description, l));
 
         for (IReorderingProcessor ireorderingprocessor : this.description) {
@@ -96,7 +104,7 @@ public class SkillEntryGui {
         }
 
         for (SkillEntryGui child : this.children) {
-            child.renderConnectivity(matrixStack, x, y, p_238692_4_);
+//            child.renderConnectivity(matrixStack, x, y, p_238692_4_);
         }
     }
 
@@ -116,6 +124,8 @@ public class SkillEntryGui {
 //        this.blit(p_238688_1_, p_238688_2_ + this.x + 3, p_238688_3_ + this.y, this.display.getFrame().getTexture(), 128 + state.getIndex() * 26, 26, 26);
         this.minecraft.getTextureManager().bind(SKILL_ICON_LOCATION);
         Draw.blit(matrixStack, x + this.x + 3, y + this.y, 16, 16, u, v, 32, 32, 256, 256);
+
+//        this.minecraft.font.drawShadow(matrixStack, "I", (float) (this.x + x + 15), (float) (this.y + y - 2), -1);
 
         for (SkillEntryGui entryGui : this.children) {
             entryGui.render(matrixStack, x, y);
@@ -167,7 +177,7 @@ public class SkillEntryGui {
         }
         sx -= 1;
         l -= 4;
-        int height = 32 + this.description.size() * 9;
+        int height = 32 + this.description.size() * 9 + 9 /* for cost */;
         if (!this.description.isEmpty()) {
             if (flag1) {
                 this.render9Sprite(matrixStack, sx, l + 26 - height, this.width, height, 10, 200, 26, 0, 52);
@@ -195,14 +205,17 @@ public class SkillEntryGui {
             for (int k1 = 0; k1 < this.description.size(); ++k1) {
                 this.minecraft.font.draw(matrixStack, this.description.get(k1), (float) (sx + 5), (float) (l + 26 - height + 7 + k1 * 9), -5592406);
             }
+            this.minecraft.font.draw(matrixStack, this.skill.getCost() + "", (float) (sx + 5), (float) (l + 26 - height + 7 + this.description.size() * 9), -5592406);
         } else {
             for (int l1 = 0; l1 < this.description.size(); ++l1) {
                 this.minecraft.font.draw(matrixStack, this.description.get(l1), (float) (sx + 5), (float) (l + 9 + 17 + l1 * 9), -5592406);
             }
+            this.minecraft.font.draw(matrixStack, this.skill.getCost() + "", (float) (sx + 5), (float) (l + 9 + 17 + this.description.size() * 9), -5592406);
         }
 
         this.minecraft.getTextureManager().bind(SKILL_ICON_LOCATION);
         Draw.blit(matrixStack, x + this.x + 3, y + this.y, 16, 16, u, v, 32, 32, 256, 256);
+        this.minecraft.font.drawShadow(matrixStack, this.skill.getLevel() + "", (float) (this.x + x + 15), (float) (this.y + y - 2), -1);
     }
 
     protected void render9Sprite(MatrixStack matrixStack, int x, int y, int w, int h, int p_238691_6_, int p_238691_7_, int p_238691_8_, int p_238691_9_, int p_238691_10_) {
@@ -242,12 +255,40 @@ public class SkillEntryGui {
 //        return skillType != null ? this.tab.getWidget(skillType) : null;
 //    }
 
-    public boolean isMouseOver(int p_191816_1_, int p_191816_2_, int p_191816_3_, int p_191816_4_) {
-        int i = p_191816_1_ + this.x;
+
+    @Override
+    public boolean mouseClicked(double x, double y, int p_231044_5_) {
+        ClientPlayerEntity player = this.minecraft.player;
+        if (player == null) {
+            return false;
+        }
+        Optional<Skill> s = this.skillType.getSkill(player);
+
+        if (s.isPresent()) {
+            Skill sk = s.get();
+            if (this.skillType == SkillTypeMandom.INSTANCE) {
+                System.out.println("A");
+            }
+            int xOffset = (this.tab.getScreen().width - 252) / 2;
+            int yOffset = (this.tab.getScreen().height - 140) / 2;
+            boolean mouseOver = this.isMouseOver(MathHelper.floor(this.tab.getScrollX()), MathHelper.floor(this.tab.getScrollY()),
+                    (int) x - xOffset - 9, (int) y - yOffset - 18);
+            if (mouseOver) {
+                DyingLight.CHANNEL.sendToServer(new SkillLevelUpMessage(sk.type.getRegistryName()));
+                sk.levelUp();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isMouseOver(int x, int y, int xRelative, int yReletive) {
+        int i = x + this.x;
         int j = i + 26;
-        int k = p_191816_2_ + this.y;
+        int k = y + this.y;
         int l = k + 26;
-        return p_191816_3_ >= i && p_191816_3_ <= j && p_191816_4_ >= k && p_191816_4_ <= l;
+        return xRelative >= i && xRelative <= j && yReletive >= k && yReletive <= l;
 
     }
 

@@ -7,6 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+/**
+ * The helper to draw skill icon on tab.
+ * The skill icon texture is a 256x256 png and each icon dimension is 32x32
+ */
 @OnlyIn(Dist.CLIENT)
 enum SkillTabType {
     ABOVE(0, 0, 28, 32, 8),
@@ -47,7 +51,7 @@ enum SkillTabType {
         Draw.blit(matrixStack, x + this.getX(index), y + this.getY(index), u, v, this.width, this.height);
     }
 
-    public void drawIcon(MatrixStack matrixStack, int x, int y, int index, IconSprite sprite) {
+    public void drawIcon(MatrixStack matrixStack, int x, int y, int index, int u, int v) {
         int i = x + this.getX(index);
         int j = y + this.getY(index);
         switch (this) {
@@ -68,7 +72,7 @@ enum SkillTabType {
                 j += 5;
         }
 
-        Draw.blit(matrixStack, i, j, 16, 16, sprite.u, sprite.v, sprite.w, sprite.h, 256, 256);
+        Draw.blit(matrixStack, i, j, 16, 16, u, v, 32, 32, 256, 256);
     }
 
     public int getX(int index) {

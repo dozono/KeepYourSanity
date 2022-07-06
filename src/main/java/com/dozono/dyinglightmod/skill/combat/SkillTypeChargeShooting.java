@@ -17,8 +17,8 @@ public class SkillTypeChargeShooting extends SkillType {
     public static class ChargeSkill extends Skill {
         public int nockTick = 0;
 
-        public ChargeSkill(SkillType type) {
-            super(type);
+        public ChargeSkill(SkillType type,PlayerEntity player) {
+            super(type, player);
         }
     }
 
@@ -28,8 +28,8 @@ public class SkillTypeChargeShooting extends SkillType {
     }
 
     @Override
-    public Skill createSkill() {
-        return new ChargeSkill(this);
+    public Skill createSkill(PlayerEntity player) {
+        return new ChargeSkill(this,player);
     }
 
     // TODO: support trident

@@ -14,10 +14,10 @@ import java.util.Optional;
 import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 
 public class SkillTypePotionMaster extends SkillType {
-    public static final SkillTypePotionMaster Instance = new SkillTypePotionMaster();
+    public static final SkillTypePotionMaster INSTANCE = new SkillTypePotionMaster();
 
     public SkillTypePotionMaster() {
-        super(Builder.create().addParent(SkillTypeSmeltingMaster.Instance));
+        super(Builder.create().addParent(SkillTypeSmeltingMaster.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

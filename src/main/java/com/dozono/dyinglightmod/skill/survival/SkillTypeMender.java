@@ -20,7 +20,7 @@ import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 
 public class SkillTypeMender extends SkillType {
 
-    public static final SkillTypeMender Instance = new SkillTypeMender();
+    public static final SkillTypeMender INSTANCE = new SkillTypeMender();
 
     public SkillTypeMender() {
         super(Builder.create().addParent(SkillTypeGastrosoph.INSTANCE));
