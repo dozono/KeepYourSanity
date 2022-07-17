@@ -8,6 +8,7 @@ import com.dozono.dyinglightmod.skill.agility.SkillTypeAquaMan;
 import com.dozono.dyinglightmod.skill.combat.SkillTypeDeathDenied;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -67,7 +68,10 @@ public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
         for (Skill skill : this.skills) {
-            skill.type.writeNBT(nbt, skill);
+            CompoundNBT seperateNBT = new CompoundNBT();
+            skill.type.writeNBT(seperateNBT, skill);
+            nbt.put(skill.type.getRegistryName().toString(), seperateNBT);
+
         }
         return nbt;
     }
@@ -75,7 +79,10 @@ public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         for (Skill skill : this.skills) {
-            skill.type.readNBT(nbt, skill);
+            if (nbt.contains(skill.type.getRegistryName().toString())) {
+                CompoundNBT inbt = nbt.getCompound(skill.type.getRegistryName().toString());
+                skill.type.readNBT(inbt, skill);
+            }
         }
     }
 }

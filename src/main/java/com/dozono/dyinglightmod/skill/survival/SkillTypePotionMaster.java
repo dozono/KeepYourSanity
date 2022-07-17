@@ -17,7 +17,7 @@ public class SkillTypePotionMaster extends SkillType {
     public static final SkillTypePotionMaster INSTANCE = new SkillTypePotionMaster();
 
     public SkillTypePotionMaster() {
-        super(Builder.create().addParent(SkillTypeSmeltingMaster.INSTANCE));
+        super(Builder.create().addParent(SkillTypeGastrosoph.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

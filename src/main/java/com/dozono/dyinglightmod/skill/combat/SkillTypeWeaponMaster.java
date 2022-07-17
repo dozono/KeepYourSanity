@@ -21,7 +21,7 @@ public class SkillTypeWeaponMaster extends SkillType {
     public static final SkillTypeWeaponMaster INSTANCE = new SkillTypeWeaponMaster();
 
     public SkillTypeWeaponMaster() {
-        super(Builder.create().addParent(SkillTypeTBD.INSTACE));
+        super(Builder.create().addParent(SkillTypeTBD.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

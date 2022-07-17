@@ -21,7 +21,7 @@ public class SkillTypeMiner extends SkillType {
     public static final SkillTypeMiner Instance = new SkillTypeMiner();
 
     public SkillTypeMiner() {
-        super(Builder.create().addParent(SkillTypeToolMaster.Instance));
+        super(Builder.create().addParent(SkillTypeTireless.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

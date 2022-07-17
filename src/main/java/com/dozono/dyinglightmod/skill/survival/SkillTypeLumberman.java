@@ -27,7 +27,7 @@ public class SkillTypeLumberman extends SkillType {
     public static final SkillTypeLumberman Instance = new SkillTypeLumberman();
 
     public SkillTypeLumberman() {
-        super(Builder.create().addParent(SkillTypeToolMaster.Instance));
+        super(Builder.create().addParent(SkillTypeTireless.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

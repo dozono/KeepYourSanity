@@ -72,9 +72,11 @@ public abstract class SkillType extends ForgeRegistryEntry<SkillType> implements
     }
 
     public void readNBT(CompoundNBT compoundNBT, Skill skill) {
+        skill.setLevel(compoundNBT.getInt("level"));
     }
 
     public void writeNBT(CompoundNBT compoundNBT, Skill skill) {
+        compoundNBT.putInt("level",skill.getLevel());
     }
 
     public Optional<Skill> getSkill(ICapabilityProvider provider) {

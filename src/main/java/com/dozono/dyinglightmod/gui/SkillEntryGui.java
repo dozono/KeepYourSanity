@@ -55,7 +55,7 @@ public class SkillEntryGui implements IGuiEventListener {
         this.skillType = skillType;
         this.minecraft = minecraft;
         this.children = children;
-        TranslationTextComponent title = new TranslationTextComponent("dylinglight.skill." + skillType.getRegistryName().getPath() + ".title");
+        TranslationTextComponent title = new TranslationTextComponent("dyinglight.skill." + skillType.getRegistryName().getPath() + ".title");
         this.title = LanguageMap.getInstance().getVisualOrder(minecraft.font.substrByWidth(title, 163));
 
         this.x = x;
@@ -64,7 +64,7 @@ public class SkillEntryGui implements IGuiEventListener {
         this.v = v;
 
         int l = 29 + minecraft.font.width(this.title);
-        TranslationTextComponent description = new TranslationTextComponent("dylinglight.skill." + skillType.getRegistryName().getPath() + ".description");
+        TranslationTextComponent description = new TranslationTextComponent("dyinglight.skill." + skillType.getRegistryName().getPath() + ".description");
         this.description = LanguageMap.getInstance().getVisualOrder(TextComponentUtil.splitOptimalLines(description, l));
 
         for (IReorderingProcessor ireorderingprocessor : this.description) {
@@ -125,7 +125,7 @@ public class SkillEntryGui implements IGuiEventListener {
         this.minecraft.getTextureManager().bind(SKILL_ICON_LOCATION);
         Draw.blit(matrixStack, x + this.x + 3, y + this.y, 16, 16, u, v, 32, 32, 256, 256);
 
-//        this.minecraft.font.drawShadow(matrixStack, "I", (float) (this.x + x + 15), (float) (this.y + y - 2), -1);
+//        this.minecraft.font.drawShadow(matrixStack, this.skill.getLevel() + "", (float) (this.x + x + 15), (float) (this.y + y - 2), -1);
 
         for (SkillEntryGui entryGui : this.children) {
             entryGui.render(matrixStack, x, y);
@@ -266,9 +266,7 @@ public class SkillEntryGui implements IGuiEventListener {
 
         if (s.isPresent()) {
             Skill sk = s.get();
-            if (this.skillType == SkillTypeMandom.INSTANCE) {
-                System.out.println("A");
-            }
+
             int xOffset = (this.tab.getScreen().width - 252) / 2;
             int yOffset = (this.tab.getScreen().height - 140) / 2;
             boolean mouseOver = this.isMouseOver(MathHelper.floor(this.tab.getScrollX()), MathHelper.floor(this.tab.getScrollY()),

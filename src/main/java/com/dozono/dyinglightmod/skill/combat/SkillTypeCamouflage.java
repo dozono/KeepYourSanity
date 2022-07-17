@@ -15,7 +15,7 @@ public class SkillTypeCamouflage extends SkillType {
     public static final SkillTypeCamouflage INSTANCE = new SkillTypeCamouflage();
 
     private SkillTypeCamouflage() {
-        super(Builder.create().addParent(SkillTypeProjectileDeflection.INSTANCE));
+        super(Builder.create().addParent(SkillTypeTBD.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

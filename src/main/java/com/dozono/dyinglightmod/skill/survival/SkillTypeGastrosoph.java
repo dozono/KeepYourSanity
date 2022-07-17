@@ -17,7 +17,7 @@ public class SkillTypeGastrosoph extends SkillType {
     public static final SkillType INSTANCE = new SkillTypeGastrosoph();
 
     private SkillTypeGastrosoph() {
-        super(Builder.create().addParent(SkillTypeTireless.INSTANCE));
+        super(Builder.create().addParent(SkillTypeMandom.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
