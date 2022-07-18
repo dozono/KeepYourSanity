@@ -4,6 +4,7 @@ import com.dozono.dyinglightmod.DyingLight;
 import com.dozono.dyinglightmod.skill.SkillContainer;
 import com.dozono.dyinglightmod.skill.agility.SkillTypeDoubleJump;
 import com.dozono.dyinglightmod.skill.combat.SkillTypeCamouflage;
+import com.dozono.dyinglightmod.skill.combat.SkillTypeTBD;
 import com.dozono.dyinglightmod.skill.survival.SkillTypeMandom;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -26,7 +27,7 @@ public class SkillScreen extends Screen {
     private static final ResourceLocation TABS_LOCATION = new ResourceLocation("textures/gui/advancements/tabs.png");
     private static final ITextComponent VERY_SAD_LABEL = new TranslationTextComponent("advancements.sad_label");
     private static final ITextComponent NO_ADVANCEMENTS_LABEL = new TranslationTextComponent("advancements.empty");
-    private static final ITextComponent TITLE = new TranslationTextComponent("skill.skill_tab");
+    private static final ITextComponent TITLE = new TranslationTextComponent("dyinglight.tab.currentlevel");
 
     private final SkillContainer container; // capability
     private final SkillTabGui[] tabs;
@@ -39,15 +40,15 @@ public class SkillScreen extends Screen {
         this.container = container;
         tabs = new SkillTabGui[]{
                 SkillTabGui.create(Minecraft.getInstance(), this, 0, SkillTypeMandom.INSTANCE,
-                        new TranslationTextComponent(DyingLight.MODID + ".survival"),
+                        new TranslationTextComponent("dyinglight.survival"),
 //                        new IconSprite(0, 0, 32, 32, SKILL_ICON_LOCATION),
                         new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),
-                SkillTabGui.create(Minecraft.getInstance(), this, 1, SkillTypeCamouflage.INSTANCE,
-                        new TranslationTextComponent(DyingLight.MODID + ".combat"),
+                SkillTabGui.create(Minecraft.getInstance(), this, 1, SkillTypeTBD.INSTANCE,
+                        new TranslationTextComponent("dyinglight.combat"),
 //                        new IconSprite(64, 32, 32, 32, SKILL_ICON_LOCATION),
                         new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),
                 SkillTabGui.create(Minecraft.getInstance(), this, 2, SkillTypeDoubleJump.INSTANCE,
-                        new TranslationTextComponent(DyingLight.MODID + ".agility"),
+                        new TranslationTextComponent("dyinglight.agility"),
 //                        new IconSprite(64, 0, 32, 32, SKILL_ICON_LOCATION),
                         new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png"))
         };
@@ -174,7 +175,10 @@ public class SkillScreen extends Screen {
 
         RenderSystem.disableBlend();
 
-        this.font.draw(matrixStack, TITLE, (float) (x + 8), (float) (y + 6), 4210752);
+
+        this.font.draw(matrixStack,  TITLE, (float) (x + 8), (float) (y + 6), 4210752);
+        int width1 = minecraft.font.width(TITLE);
+        this.font.draw(matrixStack,  minecraft.player.totalExperience+"", (float) (x + 10 + width1), (float) (y + 6), 4210752);
     }
 
     private void renderTooltips(MatrixStack matrixStack, int x, int y, int xOffset, int yOffset) {

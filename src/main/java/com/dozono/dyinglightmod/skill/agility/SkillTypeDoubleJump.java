@@ -23,7 +23,7 @@ public class SkillTypeDoubleJump extends SkillType {
     public static final SkillTypeDoubleJump INSTANCE = new SkillTypeDoubleJump();
 
     public SkillTypeDoubleJump() {
-        super(Builder.create().addParent(SkillTypeTBD.INSTACE));
+        super(Builder.create());
         MinecraftForge.EVENT_BUS.register(this);
     }
 

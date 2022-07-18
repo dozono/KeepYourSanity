@@ -219,7 +219,8 @@ public class DyingLight {
                     SkillTypeAquaMan.INSTANCE.setRegistryName("aquaman"),
                     SkillTypeDoubleJump.INSTANCE.setRegistryName("doublejump"),
                     SkillTypeRunner.INSTANCE.setRegistryName("runner"),
-                    SkillTypeSwimmer.INSTANCE.setRegistryName("swimmer")
+                    SkillTypeSwimmer.INSTANCE.setRegistryName("swimmer"),
+                    SkillTypeTBD.INSTANCE.setRegistryName("duuno")
             );
         }
     }

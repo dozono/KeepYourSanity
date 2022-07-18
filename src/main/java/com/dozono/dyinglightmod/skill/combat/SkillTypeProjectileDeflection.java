@@ -15,7 +15,7 @@ public class SkillTypeProjectileDeflection extends SkillType {
     public static final SkillTypeProjectileDeflection INSTANCE = new SkillTypeProjectileDeflection();
 
     public SkillTypeProjectileDeflection() {
-        super(Builder.create().addParent(SkillTypeChargeShooting.INSTANCE));
+        super(Builder.create().addParent(SkillTypeTBD.INSTANCE));
     }
 
     @SubscribeEvent

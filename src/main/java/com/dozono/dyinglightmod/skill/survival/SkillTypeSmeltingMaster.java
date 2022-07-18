@@ -24,12 +24,13 @@ public class SkillTypeSmeltingMaster extends SkillType {
     public static final SkillTypeSmeltingMaster INSTANCE = new SkillTypeSmeltingMaster();
 
     public SkillTypeSmeltingMaster() {
-        super(Builder.create().addParent(SkillTypeMender.INSTANCE));
+        super(Builder.create().addParent(SkillTypeToolMaster.Instance));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
     public void tick(TickEvent.PlayerTickEvent event) {
+        if (event.phase== TickEvent.Phase.START) return;
         PlayerEntity player = event.player;
         if (player.level.isClientSide) return;
         AxisAlignedBB bb = player.getBoundingBox().inflate(5, 2, 5);

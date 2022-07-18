@@ -19,7 +19,7 @@ import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 public class SkillTypeRunner extends SkillType {
 
     public SkillTypeRunner() {
-        super(Builder.create().addParent(SkillTypeTBD.INSTACE));
+        super(Builder.create().addParent(SkillTypeDoubleJump.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

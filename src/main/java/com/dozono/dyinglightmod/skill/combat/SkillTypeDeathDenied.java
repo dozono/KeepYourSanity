@@ -30,7 +30,7 @@ public class SkillTypeDeathDenied extends SkillType {
     public static final SkillTypeDeathDenied INSTANCE = new SkillTypeDeathDenied();
 
     public SkillTypeDeathDenied() {
-        super(Builder.create().addParent(SkillTypeKnockBackResist.INSTANCE));
+        super(Builder.create().addParent(SkillTypeTBD.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

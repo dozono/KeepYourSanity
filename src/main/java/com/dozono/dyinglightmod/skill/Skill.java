@@ -21,6 +21,10 @@ public class Skill {
         return level;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public int getCost() {
         return this.type.getCost(level);
     }

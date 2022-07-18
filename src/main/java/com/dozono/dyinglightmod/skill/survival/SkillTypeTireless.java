@@ -17,11 +17,15 @@ public class SkillTypeTireless extends SkillType {
 
     @SubscribeEvent
     public void onHungerDecrease(TickEvent.PlayerTickEvent event) {
+        if (event.phase== TickEvent.Phase.START) return;
         PlayerEntity player = event.player;
         if (player.level.isClientSide) return;
         player.getCapability(DyingLight.CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
             float saturationLevel = player.getFoodData().getSaturationLevel();
-            player.getFoodData().setSaturation((float) (saturationLevel * (Math.sqrt(skill.getLevel()) + 0.5)));
+//            if(player.getFoodData().getFoodLevel() - player.getFoodData()
+
+
+//            player.getFoodData().setSaturation((float) (saturationLevel * (Math.sqrt(skill.getLevel()) + 0.5)));
         }));
     }
 }

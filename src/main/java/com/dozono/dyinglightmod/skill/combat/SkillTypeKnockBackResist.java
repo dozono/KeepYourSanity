@@ -12,7 +12,7 @@ import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 public class SkillTypeKnockBackResist extends SkillType {
     public static final SkillTypeKnockBackResist INSTANCE = new SkillTypeKnockBackResist();
     public SkillTypeKnockBackResist() {
-        super(Builder.create().addParent(SkillTypeDamageBlock.INSTANCE));
+        super(Builder.create().addParent(SkillTypeTBD.INSTANCE));
     }
 
     @SubscribeEvent

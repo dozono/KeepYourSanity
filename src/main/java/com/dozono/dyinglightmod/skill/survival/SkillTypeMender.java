@@ -23,7 +23,7 @@ public class SkillTypeMender extends SkillType {
     public static final SkillTypeMender INSTANCE = new SkillTypeMender();
 
     public SkillTypeMender() {
-        super(Builder.create().addParent(SkillTypeGastrosoph.INSTANCE));
+        super(Builder.create().addParent(SkillTypeToolMaster.Instance));
         MinecraftForge.EVENT_BUS.register(this);
     }
 

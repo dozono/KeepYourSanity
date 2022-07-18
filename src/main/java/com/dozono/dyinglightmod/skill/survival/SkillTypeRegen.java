@@ -14,7 +14,7 @@ public class SkillTypeRegen extends SkillType {
     public static final SkillTypeRegen INSTANCE = new SkillTypeRegen();
 
     private SkillTypeRegen() {
-        super(Builder.create().addParent(SkillTypePotionMaster.INSTANCE).addParent(SkillTypeToolMaster.Instance));
+        super(Builder.create().addParent(SkillTypeLuck.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
