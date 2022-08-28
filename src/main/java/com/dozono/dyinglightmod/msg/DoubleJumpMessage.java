@@ -1,6 +1,7 @@
-package com.dozono.dyinglightmod.skill.agility;
+package com.dozono.dyinglightmod.msg;
 
 import com.dozono.dyinglightmod.DyingLight;
+import com.dozono.dyinglightmod.skill.agility.SkillTypeDoubleJump;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;

@@ -1,10 +1,7 @@
 package com.dozono.dyinglightmod.gui;
 
 import com.dozono.dyinglightmod.skill.SkillType;
-import com.dozono.dyinglightmod.skill.agility.SkillTypeAquaMan;
-import com.dozono.dyinglightmod.skill.agility.SkillTypeDoubleJump;
-import com.dozono.dyinglightmod.skill.agility.SkillTypeRunner;
-import com.dozono.dyinglightmod.skill.agility.SkillTypeSwimmer;
+import com.dozono.dyinglightmod.skill.agility.*;
 import com.dozono.dyinglightmod.skill.combat.*;
 import com.dozono.dyinglightmod.skill.survival.*;
 import net.minecraft.client.Minecraft;
@@ -45,10 +42,17 @@ public class SkillEntryHelper {
 //        agility
 
         map.put(SkillTypeDoubleJump.INSTANCE, new int[]{0, 0});
-        map.put(SkillTypeRunner.INSTANCE, new int[]{0, 0});
-        map.put(SkillTypeSwimmer.INSTANCE, new int[]{0, 0});
+        map.put(SkillTypeAquaMan.INSTANCE, new int[]{0, -unit});
+        map.put(SkillTypeWallClimb.INSTANCE, new int[]{-unit, 0});
+
+        map.put(SkillTypeStrongLegs.INSTANCE, new int[]{unit, 0});
+        map.put(SkillTypeRunner.INSTANCE, new int[]{unit * 2, 0});
+//
+        map.put(SkillTypeBoneCrusher.INSTANCE,new int[]{unit, unit});
+        map.put(SkillTypeLethalPunch.INSTANCE,new int[]{-unit, unit});
+
 //combat
-        map.put(SkillTypeTBD.INSTANCE,new int[]{0,0});
+        map.put(SkillTypeTBD.INSTANCE, new int[]{0, 0});
         map.put(SkillTypeCamouflage.INSTANCE, new int[]{unit, -unit});
         map.put(SkillTypeDeathDenied.INSTANCE, new int[]{-unit, -unit});
 
@@ -58,18 +62,10 @@ public class SkillEntryHelper {
         map.put(SkillTypeMarksmanship.INSTANCE, new int[]{unit, 0});
         map.put(SkillTypeChargeShooting.INSTANCE, new int[]{unit * 2, 0});
 
-        map.put(SkillTypeKnockBackResist.INSTANCE, new int[]{unit, unit });
-        map.put(SkillTypeProjectileDeflection.INSTANCE, new int[]{-unit, unit });
+        map.put(SkillTypeKnockBackResist.INSTANCE, new int[]{unit, unit});
+        map.put(SkillTypeProjectileDeflection.INSTANCE, new int[]{-unit, unit});
 
-//        map.put(SkillTypeGastrosoph.INSTANCE, new int[]{-unit, 0});
-//        map.put(SkillTypePotionMaster.INSTANCE, new int[]{-unit * 2, 0});
-//
-//        map.put(SkillTypeMender.INSTANCE, new int[]{0, unit});
-//        map.put(SkillTypeSmeltingMaster.INSTANCE, new int[]{unit, unit * 2});
-//        map.put(SkillTypeToolMaster.Instance, new int[]{-unit, unit * 2});
-//
-//        map.put(SkillTypeLuck.INSTANCE, new int[]{unit, 0});
-//        map.put(SkillTypeRegen.INSTANCE, new int[]{unit * 2, 0});
+
         //survival
         map.put(SkillTypeMandom.INSTANCE, new int[]{0, 0});
 
@@ -107,21 +103,29 @@ public class SkillEntryHelper {
         map.put(SkillTypeToolMaster.Instance, 4);
         map.put(SkillTypeMender.INSTANCE, 5);
         map.put(SkillTypeGastrosoph.INSTANCE, 6);
-        map.put(SkillTypeSmeltingMaster.INSTANCE,3);
+        map.put(SkillTypeSmeltingMaster.INSTANCE, 3);
         map.put(SkillTypeMiner.Instance, 7);
         map.put(SkillTypeLumberman.Instance, 8);
         map.put(SkillTypePotionMaster.INSTANCE, 9);
         map.put(SkillTypeRegen.INSTANCE, 10);
 
-        map.put(SkillTypeCamouflage.INSTANCE,11);
-        map.put(SkillTypeDeathDenied.INSTANCE,12);
-        map.put(SkillTypeMarksmanship.INSTANCE,13);
-        map.put(SkillTypeChargeShooting.INSTANCE,14);
-        map.put(SkillTypeDamageBlock.INSTANCE,15);
-        map.put(SkillTypeWeaponMaster.INSTANCE,16);
-        map.put(SkillTypeKnockBackResist.INSTANCE,17);
-        map.put(SkillTypeProjectileDeflection.INSTANCE,18);
-        map.put(SkillTypeTBD.INSTANCE,19);
+        map.put(SkillTypeCamouflage.INSTANCE, 11);
+        map.put(SkillTypeDeathDenied.INSTANCE, 12);
+        map.put(SkillTypeMarksmanship.INSTANCE, 13);
+        map.put(SkillTypeChargeShooting.INSTANCE, 14);
+        map.put(SkillTypeDamageBlock.INSTANCE, 15);
+        map.put(SkillTypeWeaponMaster.INSTANCE, 16);
+        map.put(SkillTypeKnockBackResist.INSTANCE, 17);
+        map.put(SkillTypeProjectileDeflection.INSTANCE, 18);
+        map.put(SkillTypeTBD.INSTANCE, 19);
+
+        map.put(SkillTypeAquaMan.INSTANCE, 20);
+        map.put(SkillTypeBoneCrusher.INSTANCE, 21);
+        map.put(SkillTypeDoubleJump.INSTANCE, 22);
+        map.put(SkillTypeLethalPunch.INSTANCE, 23);
+        map.put(SkillTypeRunner.INSTANCE, 24);
+        map.put(SkillTypeStrongLegs.INSTANCE, 25);
+        map.put(SkillTypeWallClimb.INSTANCE, 26);
 
 //        map.put(SkillTypeMandom.INSTANCE, 0);
 //        map.put(SkillTypeMandom.INSTANCE, 0);

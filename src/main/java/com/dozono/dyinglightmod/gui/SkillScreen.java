@@ -70,6 +70,11 @@ public class SkillScreen extends Screen {
         }
     }
 
+
+    public SkillTabGui getSelectedTab() {
+        return selectedTab;
+    }
+
     public void removed() {
 //        this.container.setListener((ClientSkillManager.IListener) null);
 //        ClientPlayNetHandler clientplaynethandler = this.minecraft.getConnection();

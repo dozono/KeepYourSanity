@@ -1,18 +1,25 @@
 package com.dozono.dyinglightmod.skill;
 
 import com.dozono.dyinglightmod.DyingLight;
+import com.dozono.dyinglightmod.msg.SkillStatusMessage;
 import com.dozono.dyinglightmod.skill.agility.SkillTypeDoubleJump;
 import com.dozono.dyinglightmod.skill.agility.SkillTypeRunner;
-import com.dozono.dyinglightmod.skill.agility.SkillTypeSwimmer;
 import com.dozono.dyinglightmod.skill.agility.SkillTypeAquaMan;
 import com.dozono.dyinglightmod.skill.combat.SkillTypeDeathDenied;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,6 +36,7 @@ public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
     private final PlayerEntity playerEntity;
 
     public SkillContainer(PlayerEntity player) {
+        MinecraftForge.EVENT_BUS.register(this);
         playerEntity = player;
 
         Collection<SkillType> allSkills = DyingLight.SKILL_REGISTRY.get().getValues();
@@ -85,4 +93,17 @@ public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
             }
         }
     }
+
+    @SubscribeEvent
+    public void onPlayerJoinWorld(EntityJoinWorldEvent event){
+        Entity entity = event.getEntity();
+        if(entity instanceof ServerPlayerEntity && !entity.level.isClientSide){
+            ServerPlayerEntity player = (ServerPlayerEntity) entity;
+            SkillStatusMessage skillStatusMessage = new SkillStatusMessage();
+            skillStatusMessage.nbt = this.serializeNBT();
+            DyingLight.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), skillStatusMessage);
+        }
+    }
+
+
 }

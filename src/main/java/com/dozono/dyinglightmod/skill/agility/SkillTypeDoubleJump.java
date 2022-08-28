@@ -1,9 +1,9 @@
 package com.dozono.dyinglightmod.skill.agility;
 
 import com.dozono.dyinglightmod.DyingLight;
+import com.dozono.dyinglightmod.msg.DoubleJumpMessage;
 import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
-import com.dozono.dyinglightmod.skill.combat.SkillTypeTBD;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,14 +32,14 @@ public class SkillTypeDoubleJump extends SkillType {
         public int doubleJumpDelay;
         public boolean releaseJump = false;
 
-        public DoubleJumpSkill(SkillType type,PlayerEntity player) {
-            super(type,player);
+        public DoubleJumpSkill(SkillType type, PlayerEntity player) {
+            super(type, player);
         }
     }
 
     @Override
     public Skill createSkill(PlayerEntity player) {
-        return new DoubleJumpSkill(this,player);
+        return new DoubleJumpSkill(this, player);
     }
 
     @SubscribeEvent
@@ -77,19 +77,23 @@ public class SkillTypeDoubleJump extends SkillType {
     }
 
     public static void performPlayerDoubleJump(PlayerEntity player) {
-        float f = 0.42F;
-        if (player.hasEffect(Effects.JUMP)) {
-            f += 0.1F * (float) (player.getEffect(Effects.JUMP).getAmplifier() + 1);
-        }
+        player.getCapability(CapabilitySkillContainer).ifPresent(c -> c.<DoubleJumpSkill>getSkill(SkillTypeDoubleJump.INSTANCE).ifPresent(skill -> {
+            float f = 0.42F;
 
-        Vector3d vector3d = player.getDeltaMovement();
-        player.setDeltaMovement(vector3d.x, f, vector3d.z);
-        if (player.isSprinting()) {
-            float f1 = player.yRot * ((float) Math.PI / 180F);
-            player.setDeltaMovement(player.getDeltaMovement().add(-MathHelper.sin(f1) * 0.2F, 0.0D, MathHelper.cos(f1) * 0.2F));
-        }
 
-        player.hasImpulse = true;
+            if (player.hasEffect(Effects.JUMP)) {
+                f += 0.1F * (float) (player.getEffect(Effects.JUMP).getAmplifier() + 1);
+            }
+
+            Vector3d vector3d = player.getDeltaMovement();
+            player.setDeltaMovement(vector3d.x, f, vector3d.z);
+            if (player.isSprinting()) {
+                float f1 = player.yRot * ((float) Math.PI / 180F);
+                player.setDeltaMovement(player.getDeltaMovement().add(-MathHelper.sin(f1) * 0.2F, 0.0D, MathHelper.cos(f1) * 0.2F));
+            }
+
+            player.hasImpulse = true;
+        }));
     }
 
     @SubscribeEvent

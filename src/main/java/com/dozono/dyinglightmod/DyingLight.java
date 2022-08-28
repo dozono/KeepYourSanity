@@ -5,6 +5,8 @@ import com.dozono.dyinglightmod.monster.entities.EnhancedZombieEntity;
 import com.dozono.dyinglightmod.monster.items.CustomSpawnEggItem;
 import com.dozono.dyinglightmod.monster.model.EnhancedZombieModel;
 import com.dozono.dyinglightmod.monster.renderer.EnhancedZombieRenderer;
+import com.dozono.dyinglightmod.msg.DoubleJumpMessage;
+import com.dozono.dyinglightmod.msg.SkillStatusMessage;
 import com.dozono.dyinglightmod.skill.SkillContainer;
 import com.dozono.dyinglightmod.skill.SkillLevelUpMessage;
 import com.dozono.dyinglightmod.skill.SkillType;
@@ -108,6 +110,8 @@ public class DyingLight {
                 DoubleJumpMessage::handle);
         CHANNEL.registerMessage(2, SkillLevelUpMessage.class, SkillLevelUpMessage::encode, SkillLevelUpMessage::decode,
                 SkillLevelUpMessage::handle);
+        CHANNEL.registerMessage(3, SkillStatusMessage.class, SkillStatusMessage::encode, SkillStatusMessage::decode,
+                SkillStatusMessage::handle);
 
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -219,8 +223,11 @@ public class DyingLight {
                     SkillTypeAquaMan.INSTANCE.setRegistryName("aquaman"),
                     SkillTypeDoubleJump.INSTANCE.setRegistryName("doublejump"),
                     SkillTypeRunner.INSTANCE.setRegistryName("runner"),
-                    SkillTypeSwimmer.INSTANCE.setRegistryName("swimmer"),
-                    SkillTypeTBD.INSTANCE.setRegistryName("duuno")
+                    SkillTypeTBD.INSTANCE.setRegistryName("duuno"),
+                    SkillTypeWallClimb.INSTANCE.setRegistryName("wallclimb"),
+                    SkillTypeStrongLegs.INSTANCE.setRegistryName("stronglegs"),
+                    SkillTypeBoneCrusher.INSTANCE.setRegistryName("bonecrusher"),
+                    SkillTypeLethalPunch.INSTANCE.setRegistryName("lethalpunch")
             );
         }
     }

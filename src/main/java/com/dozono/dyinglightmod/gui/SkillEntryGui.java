@@ -230,6 +230,10 @@ public class SkillEntryGui implements IGuiEventListener {
         this.renderRepeating(matrixStack, x + w - p_238691_6_, y + p_238691_6_, p_238691_6_, h - p_238691_6_ - p_238691_6_, p_238691_9_ + p_238691_7_ - p_238691_6_, p_238691_10_ + p_238691_6_, p_238691_7_, p_238691_8_ - p_238691_6_ - p_238691_6_);
     }
 
+    protected void renderIconBackground(MatrixStack matrixStack, int w, int h){
+
+    }
+
     protected void renderRepeating(MatrixStack p_238690_1_, int p_238690_2_, int p_238690_3_, int p_238690_4_, int p_238690_5_, int p_238690_6_, int p_238690_7_, int p_238690_8_, int p_238690_9_) {
         for (int i = 0; i < p_238690_4_; i += p_238690_8_) {
             int j = p_238690_2_ + i;
@@ -263,6 +267,9 @@ public class SkillEntryGui implements IGuiEventListener {
             return false;
         }
         Optional<Skill> s = this.skillType.getSkill(player);
+        if (this.tab != this.tab.getScreen().getSelectedTab()) {
+            return false;
+        }
 
         if (s.isPresent()) {
             Skill sk = s.get();
