@@ -27,6 +27,7 @@ public class SkillTypeAquaMan extends SkillType {
 
     public SkillTypeAquaMan() {
         super(Builder.create().addParent(SkillTypeDoubleJump.INSTANCE));
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent

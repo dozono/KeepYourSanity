@@ -6,6 +6,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,6 +18,8 @@ import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 public class SkillTypeLethalPunch extends SkillType {
     public SkillTypeLethalPunch() {
         super(Builder.create().addParent(SkillTypeDoubleJump.INSTANCE));
+        MinecraftForge.EVENT_BUS.register(this);
+
     }
     public static final SkillTypeLethalPunch INSTANCE = new SkillTypeLethalPunch();
 

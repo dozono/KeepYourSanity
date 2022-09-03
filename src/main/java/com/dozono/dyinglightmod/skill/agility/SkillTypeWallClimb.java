@@ -5,6 +5,7 @@ import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -14,6 +15,8 @@ public class SkillTypeWallClimb extends SkillType {
 
     public SkillTypeWallClimb() {
         super(Builder.create().addParent(SkillTypeDoubleJump.INSTANCE));
+        MinecraftForge.EVENT_BUS.register(this);
+
     }
 
     public static final SkillTypeWallClimb INSTANCE = new SkillTypeWallClimb();
