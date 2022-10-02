@@ -3,13 +3,11 @@ package com.dozono.dyinglightmod.gui;
 import com.dozono.dyinglightmod.DyingLight;
 import com.dozono.dyinglightmod.skill.SkillContainer;
 import com.dozono.dyinglightmod.skill.agility.SkillTypeDoubleJump;
-import com.dozono.dyinglightmod.skill.combat.SkillTypeCamouflage;
-import com.dozono.dyinglightmod.skill.combat.SkillTypeTBD;
+import com.dozono.dyinglightmod.skill.combat.SkillTypePlunder;
 import com.dozono.dyinglightmod.skill.survival.SkillTypeMandom;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -43,7 +41,7 @@ public class SkillScreen extends Screen {
                         new TranslationTextComponent("dyinglight.survival"),
 //                        new IconSprite(0, 0, 32, 32, SKILL_ICON_LOCATION),
                         new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),
-                SkillTabGui.create(Minecraft.getInstance(), this, 1, SkillTypeTBD.INSTANCE,
+                SkillTabGui.create(Minecraft.getInstance(), this, 1, SkillTypePlunder.INSTANCE,
                         new TranslationTextComponent("dyinglight.combat"),
 //                        new IconSprite(64, 32, 32, 32, SKILL_ICON_LOCATION),
                         new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),

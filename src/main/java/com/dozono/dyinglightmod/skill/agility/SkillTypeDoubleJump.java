@@ -3,6 +3,7 @@ package com.dozono.dyinglightmod.skill.agility;
 import com.dozono.dyinglightmod.DyingLight;
 import com.dozono.dyinglightmod.msg.DoubleJumpMessage;
 import com.dozono.dyinglightmod.skill.Skill;
+import com.dozono.dyinglightmod.skill.SkillContainer;
 import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
@@ -32,14 +33,14 @@ public class SkillTypeDoubleJump extends SkillType {
         public int doubleJumpDelay;
         public boolean releaseJump = false;
 
-        public DoubleJumpSkill(SkillType type, PlayerEntity player) {
-            super(type, player);
+        public DoubleJumpSkill(SkillType type, SkillContainer skillContainer, PlayerEntity player) {
+            super(type, skillContainer, player);
         }
     }
 
     @Override
-    public Skill createSkill(PlayerEntity player) {
-        return new DoubleJumpSkill(this, player);
+    public Skill createSkill(SkillContainer skillContainer, PlayerEntity player) {
+        return new DoubleJumpSkill(this, skillContainer, player);
     }
 
     @SubscribeEvent
@@ -69,6 +70,7 @@ public class SkillTypeDoubleJump extends SkillType {
                     skill.releaseJump = true;
                 } else if (skill.doubleJumpDelay-- <= 0 && !skill.doubleJumped && !clientPlayer.isOnGround() && !clientPlayer.isInWater() && !clientPlayer.isInWall() && skill.releaseJump) {
                     skill.doubleJumped = true;
+                    if (skill.getLevel() == 0) return;
                     performPlayerDoubleJump(clientPlayer);
                     DyingLight.CHANNEL.sendToServer(new DoubleJumpMessage());
                 }

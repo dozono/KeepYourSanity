@@ -1,6 +1,8 @@
-package com.dozono.dyinglightmod.skill;
+package com.dozono.dyinglightmod.msg;
 
 import com.dozono.dyinglightmod.DyingLight;
+import com.dozono.dyinglightmod.skill.Skill;
+import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;

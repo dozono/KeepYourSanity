@@ -3,6 +3,7 @@ package com.dozono.dyinglightmod.skill.agility;
 import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -23,16 +24,19 @@ public class SkillTypeBoneCrusher extends SkillType {
     public static final SkillTypeBoneCrusher INSTANCE = new SkillTypeBoneCrusher();
 
     @SubscribeEvent
-    public void onHurtingMob(LivingHurtEvent event){
+    public void onHurtingMob(LivingHurtEvent event) {
         DamageSource source = event.getSource();
         Entity attacker = source.getEntity();
         LivingEntity entityLiving = event.getEntityLiving();
-        if (attacker instanceof PlayerEntity){
-            if(attacker.level.isClientSide) return;
-            attacker.getCapability(CapabilitySkillContainer).ifPresent(c->c.getSkill(this).ifPresent(skill -> {
-                entityLiving.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN,(int)(skill.getLevel()*2.5f),5));
+        if (attacker instanceof PlayerEntity) {
+            if (attacker.level.isClientSide) return;
+            attacker.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
+                if (skill.getLevel() == 0) return;
+                if (entityLiving instanceof MobEntity) {
+                    entityLiving.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, (skill.getLevel() * 25), 1));
+                }
             }));
         }
-        }
+    }
 
 }

@@ -1,17 +1,14 @@
 package com.dozono.dyinglightmod.skill.agility;
 
 import com.dozono.dyinglightmod.skill.SkillType;
-import com.dozono.dyinglightmod.skill.combat.SkillTypeTBD;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.awt.*;
 import java.util.UUID;
 
 import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
@@ -33,6 +30,8 @@ public class SkillTypeRunner extends SkillType {
         if (player.level.isClientSide) return;
         player.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
             ModifiableAttributeInstance attribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (skill.getLevel() == 0) return;
+
             if (attribute != null) {
                 if (player.isSprinting()) {
                     AttributeModifier existed = attribute.getModifier(uuid);

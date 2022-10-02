@@ -19,17 +19,18 @@ public class SkillTypeStrongLegs extends SkillType {
     public static final SkillTypeStrongLegs INSTANCE = new SkillTypeStrongLegs();
 
     @SubscribeEvent
-    public void onTakingFallDamage(LivingFallEvent event){
+    public void onTakingFallDamage(LivingFallEvent event) {
         LivingEntity entity = event.getEntityLiving();
-        if(entity instanceof PlayerEntity){
-            if(entity.level.isClientSide) return;
-            entity.getCapability(CapabilitySkillContainer).ifPresent(c->c.getSkill(this).ifPresent(skill -> {
-                event.setDamageMultiplier(event.getDamageMultiplier()/(skill.getLevel()+1));
+        if (entity instanceof PlayerEntity) {
+            if (entity.level.isClientSide) return;
+            entity.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
+                if (skill.getLevel() == 0) return;
 
+                event.setDamageMultiplier((event.getDamageMultiplier()/(skill.getLevel()+0.5f)));
             }));
         }
-        }
     }
+}
 
 
 

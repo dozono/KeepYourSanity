@@ -1,6 +1,5 @@
 package com.dozono.dyinglightmod.skill.combat;
 
-import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -15,7 +14,7 @@ public class SkillTypeCamouflage extends SkillType {
     public static final SkillTypeCamouflage INSTANCE = new SkillTypeCamouflage();
 
     private SkillTypeCamouflage() {
-        super(Builder.create().addParent(SkillTypeTBD.INSTANCE));
+        super(Builder.create().addParent(SkillTypePlunder.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -30,7 +29,9 @@ public class SkillTypeCamouflage extends SkillType {
             int tickCount = victim.tickCount;
             int diff = tickCount - lastHurtByMobTimestamp;
             victim.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
-                        if (attacker instanceof MobEntity && victim.isShiftKeyDown() && diff >= 100) {
+                if (skill.getLevel() == 0) return;
+
+                if (attacker instanceof MobEntity && victim.isShiftKeyDown() && diff >= 100) {
                             ((MobEntity) attacker).setTarget(null);
                         }
                     }

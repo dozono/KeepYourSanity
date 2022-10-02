@@ -33,10 +33,10 @@ public class SkillTypeLumberman extends SkillType {
 
     @SubscribeEvent
     public void onCuttingWood(PlayerEvent.BreakSpeed event) {
-//        if(event.getPlayer().level.isClientSide) return;
         event.getPlayer().getCapability(CapabilitySkillContainer).ifPresent((c) -> {
             Optional<Skill> skill = c.getSkill(this);
-            if (skill.isPresent() && event.getPlayer().getMainHandItem().getItem() instanceof AxeItem
+            if(!skill.isPresent()) return;
+            if (skill.get().getLevel()>0 && event.getPlayer().getMainHandItem().getItem() instanceof AxeItem
                     && (DIGGABLE_MATERIALS.contains(event.getState().getMaterial())
                     || OTHER_DIGGABLE_BLOCKS.contains(event.getState().getBlock()))
             ) {

@@ -3,6 +3,7 @@ package com.dozono.dyinglightmod.skill.survival;
 import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.world.BlockEvent;
@@ -32,8 +33,19 @@ public class SkillTypeToolMaster extends SkillType {
         event.getPlayer().getCapability(CapabilitySkillContainer).ifPresent((c) -> {
             Optional<Skill> skill = c.getSkill(this);
             if (skill.isPresent()) {
-                event.getPlayer().getMainHandItem().setDamageValue(0);
+                if (skill.get().getLevel() == 0) return;
+                Item item = event.getPlayer().getMainHandItem().getItem();
+                if (item instanceof HoeItem
+                        || item instanceof PickaxeItem
+                        || item instanceof ShovelItem
+                        || item instanceof AxeItem) {
+                    item.getDefaultInstance().setDamageValue(1000);
+                    System.out.println(item.getDefaultInstance().getDamageValue());
+                }
+
             }
         });
     }
+
+
 }

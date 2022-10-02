@@ -2,9 +2,8 @@ package com.dozono.dyinglightmod.gui;
 
 import com.dozono.dyinglightmod.DyingLight;
 import com.dozono.dyinglightmod.skill.Skill;
-import com.dozono.dyinglightmod.skill.SkillLevelUpMessage;
+import com.dozono.dyinglightmod.msg.SkillLevelUpMessage;
 import com.dozono.dyinglightmod.skill.SkillType;
-import com.dozono.dyinglightmod.skill.survival.SkillTypeMandom;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -45,11 +44,7 @@ public class SkillEntryGui implements IGuiEventListener {
 
     public SkillEntryGui(Minecraft minecraft, SkillTabGui tab, SkillType skillType, int x, int y, int u, int v, List<SkillEntryGui> children) {
         if (minecraft.player != null) {
-            minecraft.player.getCapability(DyingLight.CapabilitySkillContainer).ifPresent(c -> {
-                c.getSkill(skillType).ifPresent(s -> {
-                    skill = s;
-                });
-            });
+            skillType.getSkill(minecraft.player).ifPresent(c -> this.skill = c);
         }
         this.tab = tab;
         this.skillType = skillType;
@@ -280,7 +275,6 @@ public class SkillEntryGui implements IGuiEventListener {
                     (int) x - xOffset - 9, (int) y - yOffset - 18);
             if (mouseOver) {
                 DyingLight.CHANNEL.sendToServer(new SkillLevelUpMessage(sk.type.getRegistryName()));
-                sk.levelUp();
                 return true;
             }
         }

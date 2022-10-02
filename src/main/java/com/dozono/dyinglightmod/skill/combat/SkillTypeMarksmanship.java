@@ -1,16 +1,12 @@
 package com.dozono.dyinglightmod.skill.combat;
 
-import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
-import net.minecraft.block.BarrelBlock;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.ArrowNockEvent;
@@ -27,7 +23,7 @@ public class SkillTypeMarksmanship extends SkillType {
 
     public SkillTypeMarksmanship() {
 
-        super(Builder.create().addParent(SkillTypeTBD.INSTANCE));
+        super(Builder.create().addParent(SkillTypePlunder.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -40,6 +36,8 @@ public class SkillTypeMarksmanship extends SkillType {
         if (player.level.isClientSide) return;
         player.getCapability(CapabilitySkillContainer).ifPresent((c) -> c.getSkill(this).ifPresent(skill -> {
             ModifiableAttributeInstance attribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (skill.getLevel() == 0) return;
+
             if (attribute != null) {
                 double defaultSpeed = attribute.getValue();
                 attribute.addTransientModifier(new AttributeModifier(SPEED_UUID, ("skill_speed"), defaultSpeed, AttributeModifier.Operation.ADDITION));
@@ -54,6 +52,8 @@ public class SkillTypeMarksmanship extends SkillType {
         if (player.level.isClientSide) return;
         player.getCapability(CapabilitySkillContainer).ifPresent((c) -> c.getSkill(this).ifPresent(skill -> {
             ModifiableAttributeInstance attribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (skill.getLevel() == 0) return;
+
             if (attribute != null) {
                 bow.setDamageValue(bow.getDamageValue() + skill.getLevel());
                 attribute.removeModifier(SPEED_UUID);

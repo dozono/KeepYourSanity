@@ -5,6 +5,8 @@ import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -26,11 +28,9 @@ public class SkillTypeDamageBlock extends SkillType {
         if (victim instanceof PlayerEntity) {
             if (victim.level.isClientSide) return;
             victim.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
-                        if (event.getAmount() >= 1) {
-                            event.setAmount(0.5f);
-                        } else if (event.getAmount() >= 2 && event.getAmount() <= 5) {
-                            event.setAmount(event.getAmount() - skill.getLevel());
-                        }
+                if (skill.getLevel() == 0) return;
+
+                ((PlayerEntity) victim).addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE,3600,skill.getLevel()-1));
                     }
             ));
         }

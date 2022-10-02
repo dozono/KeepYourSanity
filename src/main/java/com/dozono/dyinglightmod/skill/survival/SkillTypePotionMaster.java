@@ -5,6 +5,7 @@ import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,9 +30,11 @@ public class SkillTypePotionMaster extends SkillType {
             entityLiving.getCapability(CapabilitySkillContainer).ifPresent(c -> {
                 Optional<Skill> skill = c.getSkill(this);
                 if (skill.isPresent()) {
+                    if(skill.get().getLevel()==0) return;
                     EffectInstance effect = event.getPotionEffect();
+                    if(effect.getEffect().equals(Effects.REGENERATION)) return;
                     effect.update(new EffectInstance(effect.getEffect(),
-                            effect.getDuration() * 2,
+                            effect.getDuration() + skill.get().getLevel()*600,
                             effect.getAmplifier(),
                             effect.isAmbient(),
                             effect.isVisible(),

@@ -16,7 +16,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -34,6 +37,7 @@ import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
     private final List<Skill> skills = new ArrayList<>();
     private final PlayerEntity playerEntity;
+    private boolean dirty;
 
     public SkillContainer(PlayerEntity player) {
         MinecraftForge.EVENT_BUS.register(this);
@@ -43,7 +47,7 @@ public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
         List<SkillType> roots = allSkills.stream().filter(s -> s.getParents().size() == 0).collect(Collectors.toList());
 
         for (SkillType type : allSkills) {
-            Skill e = type.createSkill(player);
+            Skill e = type.createSkill(this, player);
             skills.add(e);
             type.mount(playerEntity, e);
         }
@@ -59,8 +63,12 @@ public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
     }
 
     @Nonnull
-    public List<Skill> getRoots() {
+    public List<Skill> getSkills() {
         return skills;
+    }
+
+    public void markDirty() {
+        this.dirty = true;
     }
 
     @Nonnull
@@ -95,15 +103,29 @@ public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
     }
 
     @SubscribeEvent
-    public void onPlayerJoinWorld(EntityJoinWorldEvent event){
-        Entity entity = event.getEntity();
-        if(entity instanceof ServerPlayerEntity && !entity.level.isClientSide){
-            ServerPlayerEntity player = (ServerPlayerEntity) entity;
-            SkillStatusMessage skillStatusMessage = new SkillStatusMessage();
-            skillStatusMessage.nbt = this.serializeNBT();
-            DyingLight.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), skillStatusMessage);
+    public void onTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+        if (this.playerEntity instanceof ServerPlayerEntity) {
+            if (this.dirty) {
+                dirty = false;
+                sendStateToPlayer((ServerPlayerEntity) this.playerEntity);
+            }
         }
     }
 
+    @SubscribeEvent
+    public void onLivingSpawn(EntityJoinWorldEvent event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof ServerPlayerEntity && entity == this.playerEntity) {
+            sendStateToPlayer((ServerPlayerEntity) entity);
+        }
+    }
 
+    private void sendStateToPlayer(ServerPlayerEntity entity) {
+        SkillStatusMessage skillStatusMessage = new SkillStatusMessage();
+        skillStatusMessage.nbt = this.serializeNBT();
+        DyingLight.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), skillStatusMessage);
+    }
 }

@@ -1,17 +1,26 @@
 package com.dozono.dyinglightmod.skill.agility;
 
+import com.dozono.dyinglightmod.DyingLight;
+import com.dozono.dyinglightmod.msg.WallClimbMessage;
 import com.dozono.dyinglightmod.skill.Skill;
+import com.dozono.dyinglightmod.skill.SkillContainer;
 import com.dozono.dyinglightmod.skill.SkillType;
-import net.minecraft.block.Blocks;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
+import java.util.Optional;
 
 public class SkillTypeWallClimb extends SkillType {
+    static KeyBinding wKey = new KeyBinding("w", 87, DyingLight.MODID);
+    public static KeyBinding vKey = new KeyBinding("v",86,DyingLight.MODID);
 
     public SkillTypeWallClimb() {
         super(Builder.create().addParent(SkillTypeDoubleJump.INSTANCE));
@@ -19,25 +28,57 @@ public class SkillTypeWallClimb extends SkillType {
 
     }
 
+    @Override
+    public Skill createSkill(SkillContainer skillContainer, PlayerEntity player) {
+        return new WallClimbSkill(this, skillContainer, player);
+    }
+
     public static final SkillTypeWallClimb INSTANCE = new SkillTypeWallClimb();
 
 
-    @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        PlayerEntity player = event.player;
-        World level = player.level;
-        player.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
-            if ((player.getDeltaMovement().x <= 0 || player.getDeltaMovement().z <= 0)
-                    && !level.getBlockState(player.blockPosition()).is(Blocks.LADDER)
-                    && !level.getBlockState(player.blockPosition()).is(Blocks.SCAFFOLDING)
-                    && player.horizontalCollision
-            ) {
-                player.setDeltaMovement(player.getDeltaMovement().x, ((double) skill.getLevel()) + player.getDeltaMovement().y, player.getDeltaMovement().z);
+    public static class WallClimbSkill extends Skill {
+        public WallClimbSkill(SkillType type, SkillContainer skillContainer, PlayerEntity player) {
+            super(type, skillContainer, player);
+        }
 
-            }
-        }));
-
-
+        public boolean canClimb = false;
     }
+
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            return;
+        }
+        PlayerEntity player = event.player;
+
+        this.getSkill(player).map(v -> ((WallClimbSkill) v)).ifPresent(skill -> {
+            if (skill.getLevel() == 0) return;
+            if (wKey.isDown() && vKey.isDown() && player.horizontalCollision) {
+                if (!skill.canClimb) {
+                    skill.canClimb = true;
+                    WallClimbMessage message = new WallClimbMessage();
+                    DyingLight.CHANNEL.sendToServer(message);
+                }
+            } else {
+                if (skill.canClimb) {
+                    skill.canClimb = false;
+                    WallClimbMessage message = new WallClimbMessage();
+                    DyingLight.CHANNEL.sendToServer(message);
+                }
+            }
+        });
+    }
+
+    public boolean onHook(PlayerEntity player) {
+        Optional<WallClimbSkill> cap = this.getSkill(player).map(v -> ((WallClimbSkill) v));
+        if (cap.isPresent()) {
+            WallClimbSkill skill = cap.get();
+            return skill.canClimb;
+        }
+
+        return false;
+    }
+
 
 }

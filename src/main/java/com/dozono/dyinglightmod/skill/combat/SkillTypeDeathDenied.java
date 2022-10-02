@@ -1,6 +1,5 @@
 package com.dozono.dyinglightmod.skill.combat;
 
-import com.dozono.dyinglightmod.DyingLight;
 import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.Entity;
@@ -19,7 +18,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.RegistryObject;
 
 import javax.annotation.Nullable;
 
@@ -30,7 +28,7 @@ public class SkillTypeDeathDenied extends SkillType {
     public static final SkillTypeDeathDenied INSTANCE = new SkillTypeDeathDenied();
 
     public SkillTypeDeathDenied() {
-        super(Builder.create().addParent(SkillTypeTBD.INSTANCE));
+        super(Builder.create().addParent(SkillTypePlunder.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -66,10 +64,14 @@ public class SkillTypeDeathDenied extends SkillType {
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent event) {
         LivingEntity target = event.getEntityLiving();
+
         if (target.level.isClientSide) return;
 
         if (target instanceof PlayerEntity) {
             target.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
+                if (skill.getLevel() == 0) {
+                    return;
+                }
                 if (target.getEffect(UNDYING_EFFECT.get()) != null) {
                     event.setCanceled(true);
                     target.setHealth(0.5f);
@@ -77,7 +79,7 @@ public class SkillTypeDeathDenied extends SkillType {
                     if (target.getEntityData().get(COOL_DOWN) == 0) {
                         event.setCanceled(true);
                         target.setHealth(0.5f);
-                        target.addEffect(new EffectInstance(UNDYING_EFFECT.get(), 200));
+                        target.addEffect(new EffectInstance(UNDYING_EFFECT.get(), 10));
                     }
                 }
             }));

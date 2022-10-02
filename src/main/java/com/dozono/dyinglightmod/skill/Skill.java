@@ -4,12 +4,14 @@ import net.minecraft.entity.player.PlayerEntity;
 
 public class Skill {
     public final SkillType type;
+    private SkillContainer skillContainer;
     private final PlayerEntity player;
 
     private int level = 0;
 
-    public Skill(SkillType type, PlayerEntity player) {
+    public Skill(SkillType type, SkillContainer skillContainer, PlayerEntity player) {
         this.type = type;
+        this.skillContainer = skillContainer;
         this.player = player;
     }
 
@@ -23,6 +25,7 @@ public class Skill {
 
     public void setLevel(int level) {
         this.level = level;
+        this.skillContainer.markDirty();
     }
 
     public int getCost() {
@@ -32,6 +35,7 @@ public class Skill {
     public void levelUp() {
         if (type.onLevelUp(player, this)) {
             this.level += 1;
+            this.skillContainer.markDirty();
         }
     }
 }

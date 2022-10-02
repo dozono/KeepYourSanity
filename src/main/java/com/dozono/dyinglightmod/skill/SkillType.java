@@ -32,8 +32,8 @@ public abstract class SkillType extends ForgeRegistryEntry<SkillType> implements
         return parents;
     }
 
-    public Skill createSkill(PlayerEntity player) {
-        return new Skill(this, player);
+    public Skill createSkill(SkillContainer skillContainer, PlayerEntity player) {
+        return new Skill(this, skillContainer, player);
     }
 
     public void mount(PlayerEntity playerEntity, Skill skill) {

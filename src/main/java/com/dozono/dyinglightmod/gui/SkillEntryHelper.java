@@ -52,7 +52,7 @@ public class SkillEntryHelper {
         map.put(SkillTypeLethalPunch.INSTANCE,new int[]{-unit, unit});
 
 //combat
-        map.put(SkillTypeTBD.INSTANCE, new int[]{0, 0});
+        map.put(SkillTypePlunder.INSTANCE, new int[]{0, 0});
         map.put(SkillTypeCamouflage.INSTANCE, new int[]{unit, -unit});
         map.put(SkillTypeDeathDenied.INSTANCE, new int[]{-unit, -unit});
 
@@ -117,7 +117,7 @@ public class SkillEntryHelper {
         map.put(SkillTypeWeaponMaster.INSTANCE, 16);
         map.put(SkillTypeKnockBackResist.INSTANCE, 17);
         map.put(SkillTypeProjectileDeflection.INSTANCE, 18);
-        map.put(SkillTypeTBD.INSTANCE, 19);
+        map.put(SkillTypePlunder.INSTANCE, 19);
 
         map.put(SkillTypeAquaMan.INSTANCE, 20);
         map.put(SkillTypeBoneCrusher.INSTANCE, 21);

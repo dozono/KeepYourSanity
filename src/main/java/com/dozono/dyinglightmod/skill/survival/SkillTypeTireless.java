@@ -21,6 +21,7 @@ public class SkillTypeTireless extends SkillType {
         PlayerEntity player = event.player;
         if (player.level.isClientSide) return;
         player.getCapability(DyingLight.CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
+            if(skill.getLevel()==0) return;
             float saturationLevel = player.getFoodData().getSaturationLevel();
 //            if(player.getFoodData().getFoodLevel() - player.getFoodData()
 

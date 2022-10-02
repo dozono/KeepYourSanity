@@ -37,6 +37,7 @@ public class SkillTypeSmeltingMaster extends SkillType {
         player.getCapability(CapabilitySkillContainer).ifPresent(c -> {
             Optional<Skill> skill = c.getSkill(this);
             if (skill.isPresent()) {
+                if(skill.get().getLevel()==0) return;
                 List<Chunk> chunks = new ArrayList<>(4);
                 int minX = ((int) bb.minX) >> 4;
                 int maxZ = ((int) bb.maxZ) >> 4;
@@ -63,7 +64,7 @@ public class SkillTypeSmeltingMaster extends SkillType {
                             double distSqr = pos.distSqr(player.blockPosition());
                             if (distSqr < 50) {
                                 AbstractFurnaceTileEntity furnaceTileEntity = (AbstractFurnaceTileEntity) entity;
-                                if (player.getRandom().nextInt(1) == 0) {
+                                if (player.getRandom().nextInt(7) <= skill.get().getLevel()) {
                                     furnaceTileEntity.tick();
                                 }
                             }

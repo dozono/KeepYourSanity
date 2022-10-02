@@ -27,13 +27,12 @@ public class SkillTypeMiner extends SkillType {
 
     @SubscribeEvent
     public void onMining(PlayerEvent.BreakSpeed event) {
-//        if (event.getPlayer().level.isClientSide) return;
         event.getPlayer().getCapability(CapabilitySkillContainer).ifPresent((c) -> {
             Optional<Skill> skill = c.getSkill(this);
             Item heldItem = event.getPlayer().getMainHandItem().getItem();
             if (skill.isPresent() && heldItem instanceof PickaxeItem) {
-                event.setNewSpeed(15f);
-                event.getPlayer().getMainHandItem().getItem().setDamage(heldItem.getDefaultInstance(), 15);
+                event.setNewSpeed(event.getOriginalSpeed()+skill.get().getLevel());
+                event.getPlayer().getMainHandItem().getItem().setDamage(heldItem.getDefaultInstance(), heldItem.getDamage(heldItem.getDefaultInstance())+skill.get().getLevel());
             }
         });
     }

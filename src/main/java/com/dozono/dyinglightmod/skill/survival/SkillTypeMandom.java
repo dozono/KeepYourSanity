@@ -60,6 +60,16 @@ public class SkillTypeMandom extends SkillType {
             this.updateMaxHealth(player, skill.get());
         }
     }
+
+    @SubscribeEvent
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event){
+        PlayerEntity player = event.getPlayer();
+        if (player.level.isClientSide) return;
+        Optional<Skill> skill = this.getSkill(player);
+        if (skill.isPresent() && player.isAlive() && skill.get().getLevel() > 0) {
+            this.updateMaxHealth(player, skill.get());
+        }
+    }
 //
 //    @SubscribeEvent
 //    public void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {

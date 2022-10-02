@@ -30,6 +30,7 @@ public class SkillTypeGastrosoph extends SkillType {
         Optional<Skill> skill = this.getSkill(event.getEntityLiving());
         if (skill.isPresent()) {
             Skill gastrosoph = skill.get();
+            if(gastrosoph.getLevel()==0) return;
             int foodLevel = ((PlayerEntity) entity).getFoodData().getFoodLevel();
             int nutrition = foodProperties.getNutrition();
             int modified = (int) (foodLevel + nutrition * Math.pow(gastrosoph.getLevel() + 0.5, 2));

@@ -7,24 +7,33 @@ import com.dozono.dyinglightmod.monster.model.EnhancedZombieModel;
 import com.dozono.dyinglightmod.monster.renderer.EnhancedZombieRenderer;
 import com.dozono.dyinglightmod.msg.DoubleJumpMessage;
 import com.dozono.dyinglightmod.msg.SkillStatusMessage;
+import com.dozono.dyinglightmod.msg.WallClimbMessage;
+import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillContainer;
-import com.dozono.dyinglightmod.skill.SkillLevelUpMessage;
+import com.dozono.dyinglightmod.msg.SkillLevelUpMessage;
 import com.dozono.dyinglightmod.skill.SkillType;
 import com.dozono.dyinglightmod.skill.agility.*;
 import com.dozono.dyinglightmod.skill.combat.*;
 import com.dozono.dyinglightmod.skill.survival.*;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 import net.minecraft.util.ResourceLocation;
@@ -32,8 +41,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -112,6 +123,8 @@ public class DyingLight {
                 SkillLevelUpMessage::handle);
         CHANNEL.registerMessage(3, SkillStatusMessage.class, SkillStatusMessage::encode, SkillStatusMessage::decode,
                 SkillStatusMessage::handle);
+        CHANNEL.registerMessage(4, WallClimbMessage.class, WallClimbMessage::encode, WallClimbMessage::decode,
+                WallClimbMessage::handle);
 
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -147,7 +160,7 @@ public class DyingLight {
         skillKey = new KeyBinding("skill_key", KeyEvent.VK_K, DyingLight.MODID);
 
         ClientRegistry.registerKeyBinding(skillKey);
-
+        ClientRegistry.registerKeyBinding(SkillTypeWallClimb.vKey);
         RenderingRegistry.registerEntityRenderingHandler(DyingLight.ENHANCED_ZOMBIE.get(),
                 manager -> new EnhancedZombieRenderer(manager, new EnhancedZombieModel<>(), 0.8f));
     }
@@ -187,6 +200,44 @@ public class DyingLight {
         }
     }
 
+
+    @SubscribeEvent
+    public void onRegisterEvent(final RegisterCommandsEvent event) {
+        CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
+        dispatcher.register((
+                Commands.literal(DyingLight.MODID)
+                        .requires((s) -> s.hasPermission(0))
+                        .then(Commands.argument("level", IntegerArgumentType.integer(0, 3))
+                                .executes((ctx) -> {
+                                    ServerPlayerEntity player = ctx.getSource().getPlayerOrException();
+                                    int level = IntegerArgumentType.getInteger(ctx, "level");
+                                    player.getCapability(CapabilitySkillContainer).ifPresent(c -> {
+                                        for (Skill skill : c.getSkills()) {
+                                            skill.setLevel(level);
+                                        }
+                                    });
+                                    return 0;
+                                })
+                        )
+
+        ));
+    }
+
+
+    @SubscribeEvent
+    public void onPlayerClone(PlayerEvent.Clone event) {
+//        TODO: not work in 1.17 see https://forums.minecraftforge.net/topic/103197-1171-player-capabilities-are-invalidated-on-death-before-they-can-be-copied/
+        if (event.isWasDeath()) {
+            event.getOriginal().getCapability(CapabilitySkillContainer).ifPresent(oldStore -> {
+                event.getEntity().getCapability(CapabilitySkillContainer).ifPresent(newStore -> {
+                    CompoundNBT compoundNBT = oldStore.serializeNBT();
+                    newStore.deserializeNBT(compoundNBT);
+                });
+            });
+        }
+    }
+
+
     // You can use EventBusSubscriber to automatically subscribe events on the
     // contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
@@ -223,7 +274,7 @@ public class DyingLight {
                     SkillTypeAquaMan.INSTANCE.setRegistryName("aquaman"),
                     SkillTypeDoubleJump.INSTANCE.setRegistryName("doublejump"),
                     SkillTypeRunner.INSTANCE.setRegistryName("runner"),
-                    SkillTypeTBD.INSTANCE.setRegistryName("duuno"),
+                    SkillTypePlunder.INSTANCE.setRegistryName("duuno"),
                     SkillTypeWallClimb.INSTANCE.setRegistryName("wallclimb"),
                     SkillTypeStrongLegs.INSTANCE.setRegistryName("stronglegs"),
                     SkillTypeBoneCrusher.INSTANCE.setRegistryName("bonecrusher"),
