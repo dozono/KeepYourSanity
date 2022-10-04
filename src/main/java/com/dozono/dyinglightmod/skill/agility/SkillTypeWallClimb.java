@@ -42,6 +42,7 @@ public class SkillTypeWallClimb extends SkillType {
         }
 
         public boolean canClimb = false;
+        public float climbHeight = 0;
     }
 
     @SubscribeEvent

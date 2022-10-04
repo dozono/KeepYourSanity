@@ -2,15 +2,11 @@ package com.dozono.dyinglightmod.skill;
 
 import com.dozono.dyinglightmod.DyingLight;
 import com.dozono.dyinglightmod.msg.SkillStatusMessage;
-import com.dozono.dyinglightmod.skill.agility.SkillTypeDoubleJump;
-import com.dozono.dyinglightmod.skill.agility.SkillTypeRunner;
-import com.dozono.dyinglightmod.skill.agility.SkillTypeAquaMan;
-import com.dozono.dyinglightmod.skill.combat.SkillTypeDeathDenied;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
+import net.minecraft.network.play.server.SSetExperiencePacket;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -18,9 +14,6 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -65,6 +58,10 @@ public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
     @Nonnull
     public List<Skill> getSkills() {
         return skills;
+    }
+
+    public void sync() {
+        sendStateToPlayer((ServerPlayerEntity) this.playerEntity);
     }
 
     public void markDirty() {
@@ -127,5 +124,6 @@ public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
         SkillStatusMessage skillStatusMessage = new SkillStatusMessage();
         skillStatusMessage.nbt = this.serializeNBT();
         DyingLight.CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), skillStatusMessage);
+        entity.connection.send(new SSetExperiencePacket(entity.experienceProgress, entity.totalExperience, entity.experienceLevel));
     }
 }

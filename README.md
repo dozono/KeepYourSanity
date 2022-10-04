@@ -3,7 +3,7 @@
 ## Agility
 
 - [v] SkillTypeAquaMan
-- [v] SkillTypeBoneCrusher
+- [x] SkillTypeBoneCrusher
 - [x] SkillTypeDoubleJump
 - [v] SkillTypeLethalPunch
 - [x] SkillTypeRunner

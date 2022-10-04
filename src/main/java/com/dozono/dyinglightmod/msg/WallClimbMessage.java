@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 
 public class WallClimbMessage {
     public boolean value;
+
     public WallClimbMessage() {
     }
 
@@ -32,7 +33,7 @@ public class WallClimbMessage {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity sender = ctx.get().getSender();
             Optional<Skill> cap = SkillTypeWallClimb.INSTANCE.getSkill(sender);
-            if (cap.isPresent()){
+            if (cap.isPresent()) {
                 SkillTypeWallClimb.WallClimbSkill skill = (SkillTypeWallClimb.WallClimbSkill) cap.get();
                 skill.canClimb = msg.value;
             }

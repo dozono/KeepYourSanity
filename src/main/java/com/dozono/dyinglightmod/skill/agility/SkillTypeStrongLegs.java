@@ -25,8 +25,7 @@ public class SkillTypeStrongLegs extends SkillType {
             if (entity.level.isClientSide) return;
             entity.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
                 if (skill.getLevel() == 0) return;
-
-                event.setDamageMultiplier((event.getDamageMultiplier()/(skill.getLevel()+0.5f)));
+                event.setDamageMultiplier((event.getDamageMultiplier()/(skill.getLevel()/3f)));
             }));
         }
     }

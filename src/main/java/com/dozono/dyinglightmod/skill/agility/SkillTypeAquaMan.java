@@ -1,7 +1,11 @@
 package com.dozono.dyinglightmod.skill.agility;
 
 import com.dozono.dyinglightmod.DyingLight;
+import com.dozono.dyinglightmod.msg.AquaManMessage;
+import com.dozono.dyinglightmod.skill.Skill;
+import com.dozono.dyinglightmod.skill.SkillContainer;
 import com.dozono.dyinglightmod.skill.SkillType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -34,18 +38,34 @@ public class SkillTypeAquaMan extends SkillType {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    @Override
+    public Skill createSkill(SkillContainer skillContainer, PlayerEntity player) {
+        return new SkillTypeAquaMan.AquaManSkill(this, skillContainer, player);
+    }
+
+
+    public static class AquaManSkill extends Skill {
+        public AquaManSkill(SkillType type, SkillContainer skillContainer, PlayerEntity player) {
+            super(type, skillContainer, player);
+        }
+
+        public int maxDolphin = this.getLevel()*2;
+
+        public int existingDolphin = 0;
+        public int dolphinLifespan = this.getLevel() * 400 + 1200;
+    }
 
     @SubscribeEvent
     public void playerInWater(TickEvent.PlayerTickEvent event) {
         PlayerEntity player = event.player;
         if (player.level.isClientSide) return;
 
-        player.getCapability(DyingLight.CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
+        this.getSkill(player).ifPresent(skill -> {
             ModifiableAttributeInstance attribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
             if (skill.getLevel() == 0) return;
             if (attribute != null) {
-                if (player.isInWater() && player.getEffect(Effects.WATER_BREATHING)==null) {
-                    player.addEffect(new EffectInstance(Effects.WATER_BREATHING,2400,1,true,false,false));
+                if (player.isInWater() && player.getEffect(Effects.WATER_BREATHING) == null) {
+                    player.addEffect(new EffectInstance(Effects.WATER_BREATHING, 2400, 1, true, false, false));
                     AttributeModifier existed = attribute.getModifier(uuid);
                     if (existed == null) {
                         attribute.addTransientModifier(new AttributeModifier(uuid, "swim_speed", (float) skill.getLevel() / 2.5f, AttributeModifier.Operation.MULTIPLY_TOTAL));
@@ -54,30 +74,40 @@ public class SkillTypeAquaMan extends SkillType {
                     attribute.removeModifier(uuid);
                 }
             }
-
-        }));
-
+        });
     }
 
     @SubscribeEvent
-    public void dolphinTickEvent(LivingDeathEvent event){
+    public void dolphinTickEvent(LivingEvent.LivingUpdateEvent event) {
+        if (event.getEntityLiving().level.isClientSide) {
+            return;
+        }
         LivingEntity entityLiving = event.getEntityLiving();
-        DamageSource source = event.getSource();
-        if(source.getEntity() ==null) return;
-        if(entityLiving instanceof MobEntity && source.getEntity().getTags().contains("aqua_man")){
-            source.getEntity().kill();
+        if(entityLiving instanceof DolphinEntity && entityLiving.getTags().contains("aqua_man")){
+            if (Minecraft.getInstance().player == null) return;
+            this.getSkill(Minecraft.getInstance().player).map(v -> (AquaManSkill) v).ifPresent((skill -> {
+                if (entityLiving.tickCount>=skill.dolphinLifespan){
+                    entityLiving.kill();
+                    skill.existingDolphin-=1;
+                    AquaManMessage msg = new AquaManMessage();
+                    DyingLight.CHANNEL.sendToServer(msg);
+                }
+            }));
         }
     }
 
     @SubscribeEvent
     public void playerHurtEvent(LivingHurtEvent event) {
         LivingEntity victim = event.getEntityLiving();
+        if (victim.level.isClientSide) return;
         Entity attacker = event.getSource().getEntity();
         if (victim instanceof PlayerEntity && attacker instanceof MobEntity) {
-            if (victim.level.isClientSide) return;
-            victim.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
-                if (victim.isInWater() && attacker instanceof MobEntity) {
-                    spawnDolphin((PlayerEntity) victim,(MobEntity)attacker);
+            this.getSkill(victim).map(v -> (AquaManSkill) v).ifPresent((skill -> {
+                if (victim.isInWater() && skill.existingDolphin<=skill.getLevel()*3) {
+                    spawnDolphin((PlayerEntity) victim, (MobEntity) attacker);
+                    skill.existingDolphin+=1;
+                    AquaManMessage msg = new AquaManMessage();
+                    DyingLight.CHANNEL.sendToServer(msg);
                 }
             }));
         }
@@ -89,7 +119,6 @@ public class SkillTypeAquaMan extends SkillType {
         dolphin.setPos(player.position().x, player.position().y, player.position().z);
         player.level.addFreshEntity(dolphin);
         dolphin.setTarget(target);
-        dolphin.doHurtTarget(target);
-    }
 
+    }
 }

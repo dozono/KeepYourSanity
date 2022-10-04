@@ -36,12 +36,13 @@ public class SkillTypeRunner extends SkillType {
                 if (player.isSprinting()) {
                     AttributeModifier existed = attribute.getModifier(uuid);
                     if (existed == null) {
-                        attribute.addTransientModifier(new AttributeModifier(uuid, "sprint_speed", (float)skill.getLevel()/2.5f, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                        attribute.addTransientModifier(new AttributeModifier(uuid, "sprint_speed", skill.getLevel()/10f, AttributeModifier.Operation.MULTIPLY_TOTAL));
                     }
                 } else {
                     attribute.removeModifier(uuid);
                 }
             }
+            System.out.println(attribute.getValue());
         }));
     }
 

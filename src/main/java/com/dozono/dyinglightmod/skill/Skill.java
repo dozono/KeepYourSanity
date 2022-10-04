@@ -35,7 +35,7 @@ public class Skill {
     public void levelUp() {
         if (type.onLevelUp(player, this)) {
             this.level += 1;
-            this.skillContainer.markDirty();
+            this.skillContainer.sync();
         }
     }
 }

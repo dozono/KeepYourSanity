@@ -14,24 +14,20 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SkillStatusMessage {
-
     public CompoundNBT nbt;
 
     public SkillStatusMessage() {
     }
-
 
     public static void encode(SkillStatusMessage msg, PacketBuffer buffer) {
         buffer.writeNbt(msg.nbt);
     }
 
     public static SkillStatusMessage decode(PacketBuffer buffer) {
-
         SkillStatusMessage skillStatusMessage = new SkillStatusMessage();
         skillStatusMessage.nbt = buffer.readNbt();
         return skillStatusMessage;
     }
-
 
     public static void handle(SkillStatusMessage msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {

@@ -178,10 +178,9 @@ public class SkillScreen extends Screen {
 
         RenderSystem.disableBlend();
 
-
-        this.font.draw(matrixStack,  TITLE, (float) (x + 8), (float) (y + 6), 4210752);
+        this.font.draw(matrixStack, TITLE, (float) (x + 8), (float) (y + 6), 4210752);
         int width1 = minecraft.font.width(TITLE);
-        this.font.draw(matrixStack,  minecraft.player.totalExperience+"", (float) (x + 10 + width1), (float) (y + 6), 4210752);
+        this.font.draw(matrixStack, minecraft.player.totalExperience + "", (float) (x + 10 + width1), (float) (y + 6), 4210752);
     }
 
     private void renderTooltips(MatrixStack matrixStack, int x, int y, int xOffset, int yOffset) {

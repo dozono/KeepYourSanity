@@ -5,12 +5,9 @@ import com.dozono.dyinglightmod.monster.entities.EnhancedZombieEntity;
 import com.dozono.dyinglightmod.monster.items.CustomSpawnEggItem;
 import com.dozono.dyinglightmod.monster.model.EnhancedZombieModel;
 import com.dozono.dyinglightmod.monster.renderer.EnhancedZombieRenderer;
-import com.dozono.dyinglightmod.msg.DoubleJumpMessage;
-import com.dozono.dyinglightmod.msg.SkillStatusMessage;
-import com.dozono.dyinglightmod.msg.WallClimbMessage;
+import com.dozono.dyinglightmod.msg.*;
 import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillContainer;
-import com.dozono.dyinglightmod.msg.SkillLevelUpMessage;
 import com.dozono.dyinglightmod.skill.SkillType;
 import com.dozono.dyinglightmod.skill.agility.*;
 import com.dozono.dyinglightmod.skill.combat.*;
@@ -125,6 +122,8 @@ public class DyingLight {
                 SkillStatusMessage::handle);
         CHANNEL.registerMessage(4, WallClimbMessage.class, WallClimbMessage::encode, WallClimbMessage::decode,
                 WallClimbMessage::handle);
+        CHANNEL.registerMessage(5, AquaManMessage.class,AquaManMessage::encode,AquaManMessage::decode,
+                AquaManMessage::handle);
 
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
