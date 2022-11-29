@@ -127,7 +127,6 @@ dependencies {
 
 mixin {
     // MixinGradle Settings
-    add sourceSets.main, 'mixins.mymod.refmap.json'
     // Configs to add to runs and jars
     config 'mixins.dyinglight.json'
 
@@ -152,7 +151,7 @@ jar {
         ])
     }
 
-    rename "mixin.refmap.json","dyinglight.mixin-refmap.json"
+//    rename "mixin.refmap.json","mixins.dyinglight.refmap.json"
 }
 
 // Example configuration to allow publishing using the maven-publish task

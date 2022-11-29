@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -35,14 +36,18 @@ public class SkillTypeLumberman extends SkillType {
     public void onCuttingWood(PlayerEvent.BreakSpeed event) {
         event.getPlayer().getCapability(CapabilitySkillContainer).ifPresent((c) -> {
             Optional<Skill> skill = c.getSkill(this);
-            if(!skill.isPresent()) return;
-            if (skill.get().getLevel()>0 && event.getPlayer().getMainHandItem().getItem() instanceof AxeItem
+            if (!skill.isPresent()) return;
+            if (skill.get().getLevel() > 0 && event.getPlayer().getMainHandItem().getItem() instanceof AxeItem
                     && (DIGGABLE_MATERIALS.contains(event.getState().getMaterial())
                     || OTHER_DIGGABLE_BLOCKS.contains(event.getState().getBlock()))
             ) {
-                event.setNewSpeed(5.0f + skill.get().getLevel() * 15f);
+                event.setNewSpeed(event.getOriginalSpeed() + skill.get().getLevel()*4);
             }
         });
     }
 
+    @Override
+    public TextComponent getDescription(Skill skill) {
+        return getCommonDescriptionContent(skill,"1","2","3");
+    }
 }

@@ -3,11 +3,12 @@
   "package": "com.dozono.dyinglightmod.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "PlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "minVersion": "0.8",
-  "refmap" : "dyinglight.mixin-refmap.json"
+  "refmap" : "mixins.dyinglight.refmap.json"
 }

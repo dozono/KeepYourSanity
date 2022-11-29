@@ -7,6 +7,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.AnvilUpdateEvent;
@@ -57,5 +58,10 @@ public class SkillTypeMender extends SkillType {
 //                event.setLevels(event.getLevels() / (skill.get().getLevel() + 1));
 //            }
 //        });
+//    }
+
+//    @Override
+//    public TextComponent getDescription(Skill skill) {
+//        return getCommonDescriptionContent(skill,)
 //    }
 }

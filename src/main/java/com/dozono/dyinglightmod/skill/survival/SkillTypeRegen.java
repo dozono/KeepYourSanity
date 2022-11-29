@@ -7,6 +7,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -37,10 +38,15 @@ public class SkillTypeRegen extends SkillType {
                 if (c.getLevel() == 0) return;
                 if (event.getSource().getEntity() instanceof MobEntity && !victim.hasEffect(Effects.REGENERATION)) {
 //                    victim.addEffect(new EffectInstance(Effects.REGENERATION, c.getLevel() * 25, 1));
-                    victim.addEffect(new EffectInstance(Effects.REGENERATION, c.getLevel() * 25,1,true,
+                    victim.addEffect(new EffectInstance(Effects.REGENERATION, c.getLevel() * 20,1,true,
                             false,false));
                 }
             });
         }
+    }
+
+    @Override
+    public TextComponent getDescription(Skill skill) {
+        return getCommonDescriptionContent(skill,"1","2","3");
     }
 }

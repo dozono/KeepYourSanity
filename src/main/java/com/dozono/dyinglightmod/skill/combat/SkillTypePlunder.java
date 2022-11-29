@@ -1,6 +1,7 @@
 package com.dozono.dyinglightmod.skill.combat;
 
 import com.dozono.dyinglightmod.DyingLight;
+import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -16,6 +17,7 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -39,7 +41,7 @@ public class SkillTypePlunder extends SkillType {
             if (skill.getLevel() == 0) return;
 
             if(target instanceof MobEntity){
-                if(player.level.random.nextInt(20)<=skill.getLevel()+1){
+                if(player.level.random.nextInt(80)<=skill.getLevel()+1){
                     Vector3d position = target.position();
                     ItemEntity item = new ItemEntity(target.level,position.x,position.y,position.z,new ItemStack(()->Items.EMERALD));
                     target.level.addFreshEntity(item);
@@ -48,4 +50,8 @@ public class SkillTypePlunder extends SkillType {
         }));
     }
 
+    @Override
+    public TextComponent getDescription(Skill skill) {
+        return getCommonDescriptionContent(skill,"2.5%","3.75%","5%");
+    }
 }

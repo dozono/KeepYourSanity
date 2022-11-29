@@ -7,6 +7,7 @@ import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -75,4 +76,8 @@ public class SkillTypeSmeltingMaster extends SkillType {
         });
     }
 
+    @Override
+    public TextComponent getDescription(Skill skill) {
+        return getCommonDescriptionContent(skill,"16%","32%","48%");
+    }
 }

@@ -1,7 +1,11 @@
 package com.dozono.dyinglightmod.skill;
 
+import com.dozono.dyinglightmod.DyingLight;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.*;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -76,13 +80,46 @@ public abstract class SkillType extends ForgeRegistryEntry<SkillType> implements
     }
 
     public void writeNBT(CompoundNBT compoundNBT, Skill skill) {
-        compoundNBT.putInt("level",skill.getLevel());
+        compoundNBT.putInt("level", skill.getLevel());
     }
 
     public Optional<Skill> getSkill(ICapabilityProvider provider) {
         return provider.getCapability(CapabilitySkillContainer).map((c) -> c.getSkill(this))
                 .flatMap((v) -> v);
     }
+
+    public String getTranslationKey() {
+        return DyingLight.MODID + ".skill." + this.getRegistryName().getPath() + ".description";
+    }
+
+    public TextComponent getDescription(Skill skill) {
+        return new TranslationTextComponent(getTranslationKey());
+    }
+
+    public static TextComponent getCommonDescriptionContent(Skill skill, String level1, String level2, String level3) {
+        TextComponent result = new StringTextComponent("");
+        TextComponent[] children = {
+                new StringTextComponent(level1),
+                new StringTextComponent("/"),
+                new StringTextComponent(level2),
+                new StringTextComponent("/"),
+                new StringTextComponent(level3)
+        };
+        for (TextComponent c : children) {
+            result.append(c);
+        }
+        result.setStyle(Style.EMPTY.withBold(true));
+        if (skill.getLevel() == 1) {
+            children[0].setStyle(Style.EMPTY.withColor(Color.fromLegacyFormat(TextFormatting.BLUE)));
+        } else if (skill.getLevel() == 2) {
+            children[2].setStyle(Style.EMPTY.withColor(Color.fromLegacyFormat(TextFormatting.BLUE)));
+        } else if (skill.getLevel() == 3) {
+            children[4].setStyle(Style.EMPTY.withColor(Color.fromLegacyFormat(TextFormatting.BLUE)));
+        }
+
+        return new TranslationTextComponent(skill.type.getTranslationKey(), result);
+    }
+
 
     public static class Builder {
         private final List<SkillType> parents = new ArrayList<>();

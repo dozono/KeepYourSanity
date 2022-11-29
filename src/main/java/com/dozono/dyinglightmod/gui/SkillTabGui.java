@@ -55,7 +55,6 @@ public class SkillTabGui {
         this.iconV = iconUV[1];
         this.background = background;
         this.title = title;
-
         this.updateRegion();
     }
 

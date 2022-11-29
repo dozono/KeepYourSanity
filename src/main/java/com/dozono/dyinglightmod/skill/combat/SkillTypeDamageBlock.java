@@ -5,10 +5,14 @@ import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
+import net.minecraft.item.ShieldItem;
+import net.minecraft.item.UseAction;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -28,11 +32,28 @@ public class SkillTypeDamageBlock extends SkillType {
         if (victim instanceof PlayerEntity) {
             if (victim.level.isClientSide) return;
             victim.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
-                if (skill.getLevel() == 0) return;
-
-                ((PlayerEntity) victim).addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE,3600,skill.getLevel()-1));
+                        if (skill.getLevel() == 0) return;
+                        ((PlayerEntity) victim).addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE,skill.getLevel() * 25,1,true,
+                                false,false));
                     }
             ));
         }
     }
+
+
+
+//    @SubscribeEvent
+//    public void onHoldingShield(TickEvent.PlayerTickEvent event){
+//        PlayerEntity player = event.player;
+//        if(player.level.isClientSide) return;
+//        player.getCapability(CapabilitySkillContainer).ifPresent(c->c.getSkill(this).ifPresent(skill -> {
+//            if(skill.getLevel()==0) return;
+//            if(player.getOffhandItem().getItem() == Items.SHIELD){
+//                ShieldItem item = (ShieldItem) player.getOffhandItem().getItem();
+//                if(item.getUseAnimation(item.getDefaultInstance())== UseAction.BLOCK){
+//
+//                }
+//            }
+//        }));
+//    }
 }

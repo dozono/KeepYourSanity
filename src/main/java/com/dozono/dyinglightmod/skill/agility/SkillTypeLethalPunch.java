@@ -5,10 +5,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.monster.DrownedEntity;
-import net.minecraft.entity.monster.ElderGuardianEntity;
-import net.minecraft.entity.monster.SkeletonEntity;
-import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.monster.*;
+import net.minecraft.entity.monster.piglin.PiglinEntity;
 import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -38,16 +36,16 @@ public class SkillTypeLethalPunch extends SkillType {
         if (player.level.isClientSide) return;
         player.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
             if (skill.getLevel() == 0) return;
-            if(!(target instanceof MobEntity)) return;
-            if (target instanceof EnderDragonEntity && player.level.random.nextInt(200) <=skill.getLevel() ) {
+            if (!(target instanceof MobEntity)) return;
+            if (target instanceof EnderDragonEntity && player.level.random.nextInt(200) <= skill.getLevel()) {
                 target.kill();
-            } else if (target instanceof EnderDragonEntity && player.level.random.nextInt(200) <=skill.getLevel()) {
+            } else if (target instanceof EnderDragonEntity && player.level.random.nextInt(200) <= skill.getLevel()) {
                 target.kill();
-            }else if (target instanceof SkeletonHorseEntity && player.level.random.nextInt(200) <=skill.getLevel()) {
+            } else if (target instanceof SkeletonHorseEntity && player.level.random.nextInt(200) <= skill.getLevel()) {
                 target.kill();
-            }else if (target instanceof ElderGuardianEntity && player.level.random.nextInt(200) <=skill.getLevel()) {
+            } else if (target instanceof ElderGuardianEntity && player.level.random.nextInt(200) <= skill.getLevel()) {
                 target.kill();
-            } else if(player.level.random.nextInt(40) <=skill.getLevel()) {
+            } else if (player.level.random.nextInt(40) <= skill.getLevel()) {
                 target.kill();
             }
         }));

@@ -25,7 +25,7 @@ public class SkillScreen extends Screen {
     private static final ResourceLocation TABS_LOCATION = new ResourceLocation("textures/gui/advancements/tabs.png");
     private static final ITextComponent VERY_SAD_LABEL = new TranslationTextComponent("advancements.sad_label");
     private static final ITextComponent NO_ADVANCEMENTS_LABEL = new TranslationTextComponent("advancements.empty");
-    private static final ITextComponent TITLE = new TranslationTextComponent("dyinglight.tab.currentlevel");
+    private static final ITextComponent TITLE = new TranslationTextComponent("dying_light.tab.currentlevel");
 
     private final SkillContainer container; // capability
     private final SkillTabGui[] tabs;

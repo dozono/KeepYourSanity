@@ -6,6 +6,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,7 +39,7 @@ public class SkillTypeMandom extends SkillType {
 
     private void updateMaxHealth(PlayerEntity player, Skill skill) {
         ModifiableAttributeInstance attribute = player.getAttribute(Attributes.MAX_HEALTH);
-        int additionalHealth = skill.getLevel() * 20;
+        int additionalHealth = skill.getLevel() * 6+2;
         if (attribute != null) {
             AttributeModifier modifier = attribute.getModifier(MAX_HEALTH_UUID);
             if (modifier == null || modifier.getAmount() != additionalHealth) {
@@ -70,9 +71,9 @@ public class SkillTypeMandom extends SkillType {
             this.updateMaxHealth(player, skill.get());
         }
     }
-//
-//    @SubscribeEvent
-//    public void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-//        updateMaxHealth(player);
-//    }
+
+    @Override
+    public TextComponent getDescription(Skill skill) {
+        return getCommonDescriptionContent(skill,"4","7","10");
+    }
 }

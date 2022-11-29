@@ -6,6 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,7 +33,7 @@ public class SkillTypePotionMaster extends SkillType {
                 if (skill.isPresent()) {
                     if(skill.get().getLevel()==0) return;
                     EffectInstance effect = event.getPotionEffect();
-                    if(effect.getEffect().equals(Effects.REGENERATION)) return;
+                    if(effect.getEffect().equals(Effects.REGENERATION) || effect.getEffect().equals(Effects.DAMAGE_RESISTANCE)) return;
                     effect.update(new EffectInstance(effect.getEffect(),
                             effect.getDuration() + skill.get().getLevel()*600,
                             effect.getAmplifier(),
@@ -45,5 +46,8 @@ public class SkillTypePotionMaster extends SkillType {
         }
     }
 
-
+    @Override
+    public TextComponent getDescription(Skill skill) {
+        return getCommonDescriptionContent(skill,"30","60","90");
+    }
 }

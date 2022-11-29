@@ -1,13 +1,17 @@
 package com.dozono.dyinglightmod.skill.combat;
 
 import com.dozono.dyinglightmod.skill.SkillType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.ArrowNockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -58,6 +62,22 @@ public class SkillTypeMarksmanship extends SkillType {
                 bow.setDamageValue(bow.getDamageValue() + skill.getLevel());
                 attribute.removeModifier(SPEED_UUID);
             }
+
         }));
+    }
+
+    @SubscribeEvent
+    public void onArrowCreated(EntityJoinWorldEvent event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof ArrowEntity) {
+            if (((ArrowEntity) entity).getOwner() instanceof PlayerEntity) {
+                ((ArrowEntity) entity).getOwner().getCapability(CapabilitySkillContainer).ifPresent((c) -> c.getSkill(this).ifPresent(skill -> {
+                    if (skill.getLevel() == 0) return;
+                    Vector3d movement = entity.getDeltaMovement();
+                    entity.setGlowing(true);
+                    entity.setDeltaMovement(movement.x*(double)(1+skill.getLevel()/10), movement.y*(double)(1+skill.getLevel()/10), movement.z*(double)(1+skill.getLevel()/10));
+                }));
+            }
+        }
     }
 }

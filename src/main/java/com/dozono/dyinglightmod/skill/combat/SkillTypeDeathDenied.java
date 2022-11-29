@@ -1,18 +1,23 @@
 package com.dozono.dyinglightmod.skill.combat;
 
+import com.dozono.dyinglightmod.mixin.PlayerEntityMixin;
 import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierManager;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Items;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -21,22 +26,34 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
 
+import java.lang.reflect.Field;
+
 import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 import static com.dozono.dyinglightmod.DyingLight.UNDYING_EFFECT;
 
 public class SkillTypeDeathDenied extends SkillType {
     public static final SkillTypeDeathDenied INSTANCE = new SkillTypeDeathDenied();
+    public static DataParameter<Integer> COOL_DOWN;
+
+    static {
+        try {
+//            COOL_DOWN= PlayerEntity["COOL_DOWN"]
+            Field field = PlayerEntity.class.getDeclaredField("COOL_DOWN");
+            field.setAccessible(true);
+            COOL_DOWN = (DataParameter<Integer>) field.get(null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public SkillTypeDeathDenied() {
         super(Builder.create().addParent(SkillTypePlunder.INSTANCE));
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public static final DataParameter<Integer> COOL_DOWN = EntityDataManager.defineId(PlayerEntity.class, DataSerializers.INT);
-
     @Override
     public void mount(PlayerEntity playerEntity, Skill skill) {
-        playerEntity.getEntityData().define(COOL_DOWN, 0);
+//        playerEntity.getEntityData().define(COOL_DOWN, 0);
     }
 
 
@@ -57,7 +74,7 @@ public class SkillTypeDeathDenied extends SkillType {
 
         @Override
         public void removeAttributeModifiers(LivingEntity e, AttributeModifierManager p_111187_2_, int p_111187_3_) {
-            e.getEntityData().set(COOL_DOWN, 2400);
+            e.getEntityData().set(COOL_DOWN, 3600);
         }
     }
 
@@ -79,7 +96,7 @@ public class SkillTypeDeathDenied extends SkillType {
                     if (target.getEntityData().get(COOL_DOWN) == 0) {
                         event.setCanceled(true);
                         target.setHealth(0.5f);
-                        target.addEffect(new EffectInstance(UNDYING_EFFECT.get(), 10));
+                        target.addEffect(new EffectInstance(UNDYING_EFFECT.get(), skill.getLevel()*20+80));
                     }
                 }
             }));
@@ -111,5 +128,10 @@ public class SkillTypeDeathDenied extends SkillType {
         if (integer != null && integer > 0) {
             event.player.getEntityData().set(COOL_DOWN, integer.intValue() - 1);
         }
+    }
+
+    @Override
+    public TextComponent getDescription(Skill skill) {
+        return getCommonDescriptionContent(skill,"5","6","7");
     }
 }

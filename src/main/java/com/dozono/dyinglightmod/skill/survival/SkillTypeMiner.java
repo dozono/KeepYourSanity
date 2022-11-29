@@ -7,6 +7,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.PickaxeItem;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -31,9 +32,17 @@ public class SkillTypeMiner extends SkillType {
             Optional<Skill> skill = c.getSkill(this);
             Item heldItem = event.getPlayer().getMainHandItem().getItem();
             if (skill.isPresent() && heldItem instanceof PickaxeItem) {
-                event.setNewSpeed(event.getOriginalSpeed()+skill.get().getLevel());
+                float modifier = skill.get().getLevel()/5f+1;
+                event.setNewSpeed(Math.round(event.getOriginalSpeed()*modifier));
                 event.getPlayer().getMainHandItem().getItem().setDamage(heldItem.getDefaultInstance(), heldItem.getDamage(heldItem.getDefaultInstance())+skill.get().getLevel());
+                System.out.println(event.getNewSpeed());
+
             }
         });
+    }
+
+    @Override
+    public TextComponent getDescription(Skill skill) {
+        return getCommonDescriptionContent(skill,"20%","40%","60%");
     }
 }

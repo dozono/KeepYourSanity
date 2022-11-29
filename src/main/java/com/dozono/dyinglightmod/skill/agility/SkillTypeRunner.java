@@ -1,10 +1,12 @@
 package com.dozono.dyinglightmod.skill.agility;
 
+import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -42,8 +44,11 @@ public class SkillTypeRunner extends SkillType {
                     attribute.removeModifier(uuid);
                 }
             }
-            System.out.println(attribute.getValue());
         }));
     }
 
+    @Override
+    public TextComponent getDescription(Skill skill) {
+        return getCommonDescriptionContent(skill,"10%","20%","30%");
+    }
 }

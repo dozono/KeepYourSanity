@@ -14,6 +14,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -30,6 +31,9 @@ import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
 public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
     private final List<Skill> skills = new ArrayList<>();
     private final PlayerEntity playerEntity;
+    /**
+     * Only used in server side. Client side effect is ignored
+     */
     private boolean dirty;
 
     public SkillContainer(PlayerEntity player) {
@@ -66,6 +70,10 @@ public class SkillContainer implements ICapabilitySerializable<CompoundNBT> {
 
     public void markDirty() {
         this.dirty = true;
+    }
+
+    public boolean isDirty() {
+        return dirty;
     }
 
     @Nonnull

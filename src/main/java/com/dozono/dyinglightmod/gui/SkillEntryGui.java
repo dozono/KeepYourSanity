@@ -30,8 +30,8 @@ public class SkillEntryGui implements IGuiEventListener {
     private final SkillTabGui tab;
     private final SkillType skillType;
     private final IReorderingProcessor title;
-    private final int width;
-    private final List<IReorderingProcessor> description;
+    private int width;
+    private List<IReorderingProcessor> description;
     private final Minecraft minecraft;
     private SkillEntryGui parent;
     private final List<SkillEntryGui> children;
@@ -50,7 +50,7 @@ public class SkillEntryGui implements IGuiEventListener {
         this.skillType = skillType;
         this.minecraft = minecraft;
         this.children = children;
-        TranslationTextComponent title = new TranslationTextComponent("dyinglight.skill." + skillType.getRegistryName().getPath() + ".title");
+        TranslationTextComponent title = new TranslationTextComponent(DyingLight.MODID + ".skill." + skillType.getRegistryName().getPath() + ".title");
         this.title = LanguageMap.getInstance().getVisualOrder(minecraft.font.substrByWidth(title, 163));
 
         this.x = x;
@@ -58,19 +58,39 @@ public class SkillEntryGui implements IGuiEventListener {
         this.u = u;
         this.v = v;
 
-        int l = 29 + minecraft.font.width(this.title);
-        TranslationTextComponent description = new TranslationTextComponent("dyinglight.skill." + skillType.getRegistryName().getPath() + ".description");
+        updateDescription();
+
+        for (SkillEntryGui child : children) {
+            child.parent = this;
+        }
+    }
+
+    private void updateDescription() {
+        int l = Math.max(29 + minecraft.font.width(this.title), 100);
+        TextComponent description = skillType.getDescription(skill);
+
+        description.append("\n\n");
+
+        int cost = skill.getCost();
+        if (cost != -1) {
+            description.append(
+                    new TranslationTextComponent(DyingLight.MODID + ".skillCost",
+                            new StringTextComponent("" + cost).withStyle(TextFormatting.BOLD)
+                    ).withStyle(TextFormatting.GOLD)
+            );
+        } else {
+            description.append(new TranslationTextComponent(DyingLight.MODID + ".skillCost.max")
+                    .withStyle(TextFormatting.GOLD));
+        }
+
         this.description = LanguageMap.getInstance().getVisualOrder(TextComponentUtil.splitOptimalLines(description, l));
 
         for (IReorderingProcessor ireorderingprocessor : this.description) {
             l = Math.max(l, minecraft.font.width(ireorderingprocessor));
         }
 
-        this.width = l + 3 + 5;
 
-        for (SkillEntryGui child : children) {
-            child.parent = this;
-        }
+        this.width = l + 3 + 5;
     }
 
 
@@ -117,6 +137,9 @@ public class SkillEntryGui implements IGuiEventListener {
 
 //        this.minecraft.getTextureManager().bind(WIDGETS_LOCATION);
 //        this.blit(p_238688_1_, p_238688_2_ + this.x + 3, p_238688_3_ + this.y, this.display.getFrame().getTexture(), 128 + state.getIndex() * 26, 26, 26);
+        if (this.skill.isClientDirty()) {
+            this.updateDescription();
+        }
         this.minecraft.getTextureManager().bind(SKILL_ICON_LOCATION);
         Draw.blit(matrixStack, x + this.x + 3, y + this.y, 16, 16, u, v, 32, 32, 256, 256);
 
@@ -172,7 +195,8 @@ public class SkillEntryGui implements IGuiEventListener {
         }
         sx -= 1;
         l -= 4;
-        int height = 32 + this.description.size() * 9 + 9 /* for cost */;
+        int height = 32 + this.description.size() * 9;
+                // + 9 /* for cost */;
         if (!this.description.isEmpty()) {
             if (flag1) {
                 this.render9Sprite(matrixStack, sx, l + 26 - height, this.width, height, 10, 200, 26, 0, 52);
@@ -200,12 +224,12 @@ public class SkillEntryGui implements IGuiEventListener {
             for (int k1 = 0; k1 < this.description.size(); ++k1) {
                 this.minecraft.font.draw(matrixStack, this.description.get(k1), (float) (sx + 5), (float) (l + 26 - height + 7 + k1 * 9), -5592406);
             }
-            this.minecraft.font.draw(matrixStack, this.skill.getCost() + "", (float) (sx + 5), (float) (l + 26 - height + 7 + this.description.size() * 9), -5592406);
+//            this.minecraft.font.draw(matrixStack, this.skill.getCost() + "", (float) (sx + 5), (float) (l + 26 - height + 7 + this.description.size() * 9), -5592406);
         } else {
             for (int l1 = 0; l1 < this.description.size(); ++l1) {
                 this.minecraft.font.draw(matrixStack, this.description.get(l1), (float) (sx + 5), (float) (l + 9 + 17 + l1 * 9), -5592406);
             }
-            this.minecraft.font.draw(matrixStack, this.skill.getCost() + "", (float) (sx + 5), (float) (l + 9 + 17 + this.description.size() * 9), -5592406);
+//            this.minecraft.font.draw(matrixStack, this.skill.getCost() + "", (float) (sx + 5), (float) (l + 9 + 17 + this.description.size() * 9), -5592406);
         }
 
         this.minecraft.getTextureManager().bind(SKILL_ICON_LOCATION);
@@ -225,7 +249,7 @@ public class SkillEntryGui implements IGuiEventListener {
         this.renderRepeating(matrixStack, x + w - p_238691_6_, y + p_238691_6_, p_238691_6_, h - p_238691_6_ - p_238691_6_, p_238691_9_ + p_238691_7_ - p_238691_6_, p_238691_10_ + p_238691_6_, p_238691_7_, p_238691_8_ - p_238691_6_ - p_238691_6_);
     }
 
-    protected void renderIconBackground(MatrixStack matrixStack, int w, int h){
+    protected void renderIconBackground(MatrixStack matrixStack, int w, int h) {
 
     }
 

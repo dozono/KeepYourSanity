@@ -2,37 +2,37 @@
 
 ## Agility
 
-- [v] SkillTypeAquaMan
+- [x] SkillTypeAquaMan
 - [x] SkillTypeBoneCrusher
 - [x] SkillTypeDoubleJump
-- [v] SkillTypeLethalPunch
+- [x] SkillTypeLethalPunch
 - [x] SkillTypeRunner
 - [x] SkillTypeStrongLegs
-- [v] SkillTypeWallClimb
+- [x] SkillTypeWallClimb
 
 ## Combat
 
 - [x] SkillTypeCamouflage
-- [ ] SkillTypeChargeShooting
-- [x] SkillTypeDamageBlock
+- [x] SkillTypeChargeShooting
+- [ ] SkillTypeDamageBlock
 - [x] SkillTypeDeathDenied
-- [v] SkillTypeKnockBackResist
-- [ ] SkillTypeMarksmanship
+- [x] SkillTypeKnockBackResist
+- [x] SkillTypeMarksmanship
 - [x] SkillTypePlunder
-- [ ] SkillTypeProjectileDeflection
-- [v] SkillTypeWeaponMaster
+- [x] SkillTypeProjectileDeflection
+- [x] SkillTypeWeaponMaster
 
 ## Survival
 
-- [v] SkillTypeGastrosoph
+- [x] SkillTypeGastrosoph
 - [x] SkillTypeLuck
-- [ ] SkillTypeLumberman
-- [v] SkillTypeMandom
-- [ ] SkillTypeMender
-- [ ] SkillTypeMiner
-- [v] SkillTypePotionMaster
+- [x] SkillTypeLumberman
+- [x] SkillTypeMandom
+- [x] SkillTypeMender
+- [x] SkillTypeMiner
+- [x] SkillTypePotionMaster
 - [x] SkillTypeRegen
 - [x] SkillTypeSmeltingMaster
 - [ ] SkillTypeTireless
-- [ ] SkillTypeToolMaster    0 to be changed
+- [x] SkillTypeToolMaster    0 to be changed
 

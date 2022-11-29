@@ -1,8 +1,10 @@
 package com.dozono.dyinglightmod.skill.combat;
 
+import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -26,12 +28,17 @@ public class SkillTypeProjectileDeflection extends SkillType {
                 if (skill.getLevel() == 0) return;
 
                 Random probability = new Random();
-                if (probability.nextFloat() * 0.6 < (float) skill.getLevel() / 10 + 0.1 && event.getSource().isProjectile()) {
+                if (probability.nextFloat()< (float) skill.getLevel() / 10 + 0.1 && event.getSource().isProjectile()) {
                     event.setCanceled(true);
                 }
             }));
         }
 
 
+    }
+
+    @Override
+    public TextComponent getDescription(Skill skill) {
+        return getCommonDescriptionContent(skill,"20%","30%","40%");
     }
 }

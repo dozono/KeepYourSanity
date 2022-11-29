@@ -226,14 +226,12 @@ public class DyingLight {
     @SubscribeEvent
     public void onPlayerClone(PlayerEvent.Clone event) {
 //        TODO: not work in 1.17 see https://forums.minecraftforge.net/topic/103197-1171-player-capabilities-are-invalidated-on-death-before-they-can-be-copied/
-        if (event.isWasDeath()) {
             event.getOriginal().getCapability(CapabilitySkillContainer).ifPresent(oldStore -> {
                 event.getEntity().getCapability(CapabilitySkillContainer).ifPresent(newStore -> {
                     CompoundNBT compoundNBT = oldStore.serializeNBT();
                     newStore.deserializeNBT(compoundNBT);
                 });
             });
-        }
     }
 
 
@@ -273,7 +271,7 @@ public class DyingLight {
                     SkillTypeAquaMan.INSTANCE.setRegistryName("aquaman"),
                     SkillTypeDoubleJump.INSTANCE.setRegistryName("doublejump"),
                     SkillTypeRunner.INSTANCE.setRegistryName("runner"),
-                    SkillTypePlunder.INSTANCE.setRegistryName("duuno"),
+                    SkillTypePlunder.INSTANCE.setRegistryName("plunder"),
                     SkillTypeWallClimb.INSTANCE.setRegistryName("wallclimb"),
                     SkillTypeStrongLegs.INSTANCE.setRegistryName("stronglegs"),
                     SkillTypeBoneCrusher.INSTANCE.setRegistryName("bonecrusher"),

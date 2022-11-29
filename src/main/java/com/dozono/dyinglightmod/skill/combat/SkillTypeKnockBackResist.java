@@ -1,8 +1,10 @@
 package com.dozono.dyinglightmod.skill.combat;
 
+import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -21,9 +23,10 @@ public class SkillTypeKnockBackResist extends SkillType {
             if(target.level.isClientSide) return;
             target.getCapability(CapabilitySkillContainer).ifPresent(c->c.getSkill(this).ifPresent(skill->{
                 if (skill.getLevel() == 0) return;
-
                 event.setStrength(event.getStrength()/skill.getLevel()+1);
             }));
         }
     }
+
+
 }
