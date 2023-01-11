@@ -13,7 +13,6 @@ import com.dozono.dyinglightmod.skill.agility.*;
 import com.dozono.dyinglightmod.skill.combat.*;
 import com.dozono.dyinglightmod.skill.survival.*;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -122,8 +121,8 @@ public class DyingLight {
                 SkillStatusMessage::handle);
         CHANNEL.registerMessage(4, WallClimbMessage.class, WallClimbMessage::encode, WallClimbMessage::decode,
                 WallClimbMessage::handle);
-        CHANNEL.registerMessage(5, AquaManMessage.class,AquaManMessage::encode,AquaManMessage::decode,
-                AquaManMessage::handle);
+        CHANNEL.registerMessage(6, SprintMessage.class, SprintMessage::encode, SprintMessage::decode,
+                SprintMessage::handle);
 
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -226,12 +225,12 @@ public class DyingLight {
     @SubscribeEvent
     public void onPlayerClone(PlayerEvent.Clone event) {
 //        TODO: not work in 1.17 see https://forums.minecraftforge.net/topic/103197-1171-player-capabilities-are-invalidated-on-death-before-they-can-be-copied/
-            event.getOriginal().getCapability(CapabilitySkillContainer).ifPresent(oldStore -> {
-                event.getEntity().getCapability(CapabilitySkillContainer).ifPresent(newStore -> {
-                    CompoundNBT compoundNBT = oldStore.serializeNBT();
-                    newStore.deserializeNBT(compoundNBT);
-                });
+        event.getOriginal().getCapability(CapabilitySkillContainer).ifPresent(oldStore -> {
+            event.getEntity().getCapability(CapabilitySkillContainer).ifPresent(newStore -> {
+                CompoundNBT compoundNBT = oldStore.serializeNBT();
+                newStore.deserializeNBT(compoundNBT);
             });
+        });
     }
 
 

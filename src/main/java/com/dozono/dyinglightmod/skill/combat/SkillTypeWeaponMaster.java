@@ -47,14 +47,14 @@ public class SkillTypeWeaponMaster extends SkillType {
                 if(attributes != null){
                     AttributeModifier modifier = attributes.getModifier(ATTACK_SPEED_UUID);
                     if(modifier == null){
-//                        attributes.addTransientModifier(new AttributeModifier(ATTACK_SPEED_UUID,"attack_speed", skill.getLevel(), AttributeModifier.Operation.ADDITION));
+                        attributes.addTransientModifier(new AttributeModifier(ATTACK_SPEED_UUID,"attack_speed", skill.getLevel()*100, AttributeModifier.Operation.ADDITION));
                         System.out.println(attributes.getModifier(ATTACK_SPEED_UUID));
                     }
                     if(modifier!=null){
                         attributes.removeModifier(ATTACK_SPEED_UUID );
                     }
                 }
-                victim.hurt(new DamageSource("player_additional_attack"), heldItem.getDamage(heldItem.getDefaultInstance())/(4f-skill.getLevel()));
+                victim.hurt(new DamageSource("player_additional_attack"), heldItem.getDamage(heldItem.getDefaultInstance())/(5f-skill.getLevel()));
 
                     }
             ));

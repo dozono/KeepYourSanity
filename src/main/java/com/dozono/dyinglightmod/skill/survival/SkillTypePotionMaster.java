@@ -1,5 +1,6 @@
 package com.dozono.dyinglightmod.skill.survival;
 
+import com.dozono.dyinglightmod.DyingLight;
 import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
 import net.minecraft.entity.LivingEntity;
@@ -31,11 +32,15 @@ public class SkillTypePotionMaster extends SkillType {
             entityLiving.getCapability(CapabilitySkillContainer).ifPresent(c -> {
                 Optional<Skill> skill = c.getSkill(this);
                 if (skill.isPresent()) {
-                    if(skill.get().getLevel()==0) return;
+                    if (skill.get().getLevel() == 0) return;
                     EffectInstance effect = event.getPotionEffect();
-                    if(effect.getEffect().equals(Effects.REGENERATION) || effect.getEffect().equals(Effects.DAMAGE_RESISTANCE)) return;
+                    if (effect.getEffect().equals(Effects.REGENERATION)
+                            || effect.getEffect().equals(Effects.DAMAGE_RESISTANCE)
+                            || effect.getEffect().equals(DyingLight.UNDYING_EFFECT)
+                            || effect.getEffect().equals(Effects.WATER_BREATHING)
+                            || effect.getEffect().equals(Effects.DOLPHINS_GRACE)) return;
                     effect.update(new EffectInstance(effect.getEffect(),
-                            effect.getDuration() + skill.get().getLevel()*600,
+                            effect.getDuration() + skill.get().getLevel() * 600,
                             effect.getAmplifier(),
                             effect.isAmbient(),
                             effect.isVisible(),
@@ -48,6 +53,6 @@ public class SkillTypePotionMaster extends SkillType {
 
     @Override
     public TextComponent getDescription(Skill skill) {
-        return getCommonDescriptionContent(skill,"30","60","90");
+        return getCommonDescriptionContent(skill, "30", "60", "90");
     }
 }

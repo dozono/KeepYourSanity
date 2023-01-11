@@ -1,7 +1,10 @@
 package com.dozono.dyinglightmod.skill.survival;
 
+import com.dozono.dyinglightmod.DyingLight;
+import com.dozono.dyinglightmod.msg.SprintMessage;
 import com.dozono.dyinglightmod.skill.Skill;
 import com.dozono.dyinglightmod.skill.SkillType;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraftforge.common.MinecraftForge;
@@ -29,23 +32,19 @@ public class SkillTypeToolMaster extends SkillType {
 
     @SubscribeEvent
     public void onUsingTools(BlockEvent.BreakEvent event) {
+        PlayerEntity player = event.getPlayer();
         if (event.getPlayer().level.isClientSide) return;
-        event.getPlayer().getCapability(CapabilitySkillContainer).ifPresent((c) -> {
-            Optional<Skill> skill = c.getSkill(this);
-            if (skill.isPresent()) {
-                if (skill.get().getLevel() == 0) return;
-                Item item = event.getPlayer().getMainHandItem().getItem();
-                if (item instanceof HoeItem
-                        || item instanceof PickaxeItem
-                        || item instanceof ShovelItem
-                        || item instanceof AxeItem) {
-                    item.getDefaultInstance().setDamageValue(1000);
-                    System.out.println(item.getDefaultInstance().getDamageValue());
-                }
-
+        player.getCapability(DyingLight.CapabilitySkillContainer).ifPresent((c) -> c.getSkill(this).ifPresent(skill -> {
+            if (skill.getLevel() == 0) return;
+            Item item = event.getPlayer().getMainHandItem().getItem();
+            if (item instanceof HoeItem
+                    || item instanceof PickaxeItem
+                    || item instanceof ShovelItem
+                    || item instanceof AxeItem) {
+                ((ToolItem) item).getDefaultInstance().setDamageValue(0);
+                item.setDamage(item.getDefaultInstance(),0);
             }
-        });
+        }));
     }
-
 
 }

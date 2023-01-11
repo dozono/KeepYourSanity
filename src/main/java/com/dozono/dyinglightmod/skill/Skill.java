@@ -50,7 +50,7 @@ public class Skill {
     }
 
     public void levelUp() {
-        if (type.onLevelUp(player, this)) {
+        if (type.onLevelUp(player, this, this.level + 1)) {
             this.level += 1;
             this.skillContainer.sync();
         }

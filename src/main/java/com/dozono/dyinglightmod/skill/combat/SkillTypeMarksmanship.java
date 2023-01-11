@@ -43,7 +43,7 @@ public class SkillTypeMarksmanship extends SkillType {
             if (skill.getLevel() == 0) return;
 
             if (attribute != null) {
-                double defaultSpeed = attribute.getValue();
+                double defaultSpeed = attribute.getValue()* (skill.getLevel());
                 attribute.addTransientModifier(new AttributeModifier(SPEED_UUID, ("skill_speed"), defaultSpeed, AttributeModifier.Operation.ADDITION));
             }
         }));
@@ -57,7 +57,6 @@ public class SkillTypeMarksmanship extends SkillType {
         player.getCapability(CapabilitySkillContainer).ifPresent((c) -> c.getSkill(this).ifPresent(skill -> {
             ModifiableAttributeInstance attribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
             if (skill.getLevel() == 0) return;
-
             if (attribute != null) {
                 bow.setDamageValue(bow.getDamageValue() + skill.getLevel());
                 attribute.removeModifier(SPEED_UUID);
@@ -74,8 +73,9 @@ public class SkillTypeMarksmanship extends SkillType {
                 ((ArrowEntity) entity).getOwner().getCapability(CapabilitySkillContainer).ifPresent((c) -> c.getSkill(this).ifPresent(skill -> {
                     if (skill.getLevel() == 0) return;
                     Vector3d movement = entity.getDeltaMovement();
-                    entity.setGlowing(true);
-                    entity.setDeltaMovement(movement.x*(double)(1+skill.getLevel()/10), movement.y*(double)(1+skill.getLevel()/10), movement.z*(double)(1+skill.getLevel()/10));
+                    double multiplier = 1d+skill.getLevel()/10d;
+//                    Vector3d normalize = entity.getDeltaMovement().normalize();
+                    entity.setDeltaMovement(movement.scale(multiplier));
                 }));
             }
         }

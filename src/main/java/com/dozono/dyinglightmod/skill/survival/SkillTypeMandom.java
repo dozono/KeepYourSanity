@@ -14,8 +14,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
-
 public class SkillTypeMandom extends SkillType {
     private static final UUID MAX_HEALTH_UUID = UUID.fromString("56a11baf-7594-4ae8-8b9b-47c0370801f2");
     public static final SkillType INSTANCE = new SkillTypeMandom();
@@ -26,54 +24,47 @@ public class SkillTypeMandom extends SkillType {
     }
 
     @Override
-    public boolean onLevelUp(PlayerEntity player, Skill skill) {
-        if (super.onLevelUp(player, skill)) {
+    public boolean onLevelUp(PlayerEntity player, Skill skill, int newLevel) {
+        if (super.onLevelUp(player, skill, newLevel)) {
             if (player.level.isClientSide) {
                 return true;
             }
-            this.updateMaxHealth(player, skill);
+            this.updateMaxHealth(player, newLevel);
             return true;
         }
         return false;
     }
 
-    private void updateMaxHealth(PlayerEntity player, Skill skill) {
+
+    private void updateMaxHealth(PlayerEntity player, int newLevel) {
         ModifiableAttributeInstance attribute = player.getAttribute(Attributes.MAX_HEALTH);
-        int additionalHealth = skill.getLevel() * 6+2;
-        if (attribute != null) {
-            AttributeModifier modifier = attribute.getModifier(MAX_HEALTH_UUID);
-            if (modifier == null || modifier.getAmount() != additionalHealth) {
-                if (modifier != null) {
-                    attribute.removeModifier(modifier);
-                }
-                attribute.addTransientModifier(new AttributeModifier("skill_additional_health",
-                        additionalHealth, AttributeModifier.Operation.ADDITION));
-            }
+        int additionalHealth = newLevel * 6 + 2;
+        if (attribute == null) {
+            return;
         }
+        AttributeModifier modifier = attribute.getModifier(MAX_HEALTH_UUID);
+        if (modifier != null) {
+            if (modifier.getAmount() == additionalHealth) return;
+            attribute.removeModifier(modifier);
+        }
+        attribute.addPermanentModifier(new AttributeModifier(MAX_HEALTH_UUID, "skill_additional_health",
+                additionalHealth, AttributeModifier.Operation.ADDITION));
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         PlayerEntity player = event.getPlayer();
         if (player.level.isClientSide) return;
         Optional<Skill> skill = this.getSkill(player);
         if (skill.isPresent() && player.isAlive() && skill.get().getLevel() > 0) {
-            this.updateMaxHealth(player, skill.get());
+            this.updateMaxHealth(player, skill.get().getLevel());
+            player.setHealth(40f);
         }
     }
 
-    @SubscribeEvent
-    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event){
-        PlayerEntity player = event.getPlayer();
-        if (player.level.isClientSide) return;
-        Optional<Skill> skill = this.getSkill(player);
-        if (skill.isPresent() && player.isAlive() && skill.get().getLevel() > 0) {
-            this.updateMaxHealth(player, skill.get());
-        }
-    }
 
     @Override
     public TextComponent getDescription(Skill skill) {
-        return getCommonDescriptionContent(skill,"4","7","10");
+        return getCommonDescriptionContent(skill, "4", "7", "10");
     }
 }

@@ -2,7 +2,7 @@
 
 ## Agility
 
-- [x] SkillTypeAquaMan
+- [ ] SkillTypeAquaMan
 - [x] SkillTypeBoneCrusher
 - [x] SkillTypeDoubleJump
 - [x] SkillTypeLethalPunch
@@ -14,7 +14,7 @@
 
 - [x] SkillTypeCamouflage
 - [x] SkillTypeChargeShooting
-- [ ] SkillTypeDamageBlock
+- [x] SkillTypeDamageBlock
 - [x] SkillTypeDeathDenied
 - [x] SkillTypeKnockBackResist
 - [x] SkillTypeMarksmanship
@@ -33,6 +33,6 @@
 - [x] SkillTypePotionMaster
 - [x] SkillTypeRegen
 - [x] SkillTypeSmeltingMaster
-- [ ] SkillTypeTireless
-- [x] SkillTypeToolMaster    0 to be changed
+- [x] SkillTypeTireless
+- [ ] SkillTypeToolMaster    0 to be changed
 

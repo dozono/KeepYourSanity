@@ -4,8 +4,6 @@ import com.dozono.dyinglightmod.DyingLight;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.*;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -56,7 +54,7 @@ public abstract class SkillType extends ForgeRegistryEntry<SkillType> implements
         return -1;
     }
 
-    public boolean onLevelUp(PlayerEntity player, Skill skill) {
+    public boolean onLevelUp(PlayerEntity player, Skill skill, int newLevel) {
         int totalExperience = player.totalExperience;
         for (SkillType parent : this.parents) {
             Optional<Skill> parentSkill = parent.getSkill(player);
