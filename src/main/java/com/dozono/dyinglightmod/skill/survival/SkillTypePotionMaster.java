@@ -36,7 +36,7 @@ public class SkillTypePotionMaster extends SkillType {
                     EffectInstance effect = event.getPotionEffect();
                     if (effect.getEffect().equals(Effects.REGENERATION)
                             || effect.getEffect().equals(Effects.DAMAGE_RESISTANCE)
-                            || effect.getEffect().equals(DyingLight.UNDYING_EFFECT)
+                            || effect.getEffect().equals(DyingLight.UNDYING_EFFECT.get())
                             || effect.getEffect().equals(Effects.WATER_BREATHING)
                             || effect.getEffect().equals(Effects.DOLPHINS_GRACE)) return;
                     effect.update(new EffectInstance(effect.getEffect(),

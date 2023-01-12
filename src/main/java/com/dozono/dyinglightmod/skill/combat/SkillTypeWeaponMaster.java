@@ -17,8 +17,10 @@ import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.dozono.dyinglightmod.DyingLight.CapabilitySkillContainer;
@@ -32,55 +34,63 @@ public class SkillTypeWeaponMaster extends SkillType {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    @Override
+    public boolean onLevelUp(PlayerEntity player, Skill skill, int newLevel) {
+        boolean canLevelUp = super.onLevelUp(player, skill, newLevel);
+        if (canLevelUp) {
+            updateAttackSpeed(player, skill.getLevel());
+        }
+        return canLevelUp;
+    }
 
-    @SubscribeEvent
-    public void onAttacking(AttackEntityEvent event) {
-        LivingEntity victim = event.getEntityLiving();
-        PlayerEntity player = event.getPlayer();
-        Item heldItem = player.getMainHandItem().getItem();
-        if (player.level.isClientSide) return;
-        if (victim instanceof MobEntity && heldItem instanceof SwordItem || heldItem instanceof AxeItem) {
-
-            player.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
-                if (skill.getLevel() == 0) return;
-                ModifiableAttributeInstance attributes = player.getAttribute(Attributes.ATTACK_SPEED);
-                if(attributes != null){
-                    AttributeModifier modifier = attributes.getModifier(ATTACK_SPEED_UUID);
-                    if(modifier == null){
-                        attributes.addTransientModifier(new AttributeModifier(ATTACK_SPEED_UUID,"attack_speed", skill.getLevel()*100, AttributeModifier.Operation.ADDITION));
-                        System.out.println(attributes.getModifier(ATTACK_SPEED_UUID));
-                    }
-                    if(modifier!=null){
-                        attributes.removeModifier(ATTACK_SPEED_UUID );
-                    }
-                }
-                victim.hurt(new DamageSource("player_additional_attack"), heldItem.getDamage(heldItem.getDefaultInstance())/(5f-skill.getLevel()));
-
-                    }
-            ));
+    private static void updateAttackSpeed(PlayerEntity player, int level) {
+        ModifiableAttributeInstance attributes = player.getAttribute(Attributes.ATTACK_SPEED);
+        if (attributes != null) {
+            AttributeModifier modifier = attributes.getModifier(ATTACK_SPEED_UUID);
+            if (modifier != null) {
+                attributes.removeModifier(ATTACK_SPEED_UUID);
+            }
+            attributes.addPermanentModifier(new AttributeModifier(ATTACK_SPEED_UUID, "attack_speed", level * 0.3, AttributeModifier.Operation.ADDITION));
         }
     }
 
-//    @SubscribeEvent
-//    public void playerTick(TickEvent.PlayerTickEvent event) {
-//        PlayerEntity player = event.player;
+    @SubscribeEvent
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        PlayerEntity player = event.getPlayer();
+        if (player.level.isClientSide) return;
+        Optional<Skill> skill = this.getSkill(player);
+        if (skill.isPresent() && player.isAlive() && skill.get().getLevel() > 0) {
+            updateAttackSpeed(player, skill.get().getLevel());
+        }
+    }
+
+    @SubscribeEvent
+    public void onAttacking(AttackEntityEvent event) {
+//        LivingEntity victim = event.getEntityLiving();
+//        PlayerEntity player = event.getPlayer();
+//        Item heldItem = player.getMainHandItem().getItem();
 //        if (player.level.isClientSide) return;
-//        player.getCapability(CapabilitySkillContainer).ifPresent(c -> c.getSkill(this).ifPresent(skill -> {
-//                    if (skill.getLevel() == 0) return;
-//                    ModifiableAttributeInstance attributes = player.getAttribute(Attributes.ATTACK_SPEED);
-//                    if (attributes != null) {
-//                        AttributeModifier modifier = attributes.getModifier(ATTACK_SPEED_UUID);
-//                        if (modifier != null) {
-//                            attributes.addPermanentModifier(new AttributeModifier(ATTACK_SPEED_UUID, "attack_speed", skill.getLevel(), AttributeModifier.Operation.ADDITION));
-//                        }
-//                    }
-//                }
-//        ));
-//    }
+//        if (!(victim instanceof MobEntity)) return;
+//        if ((!(heldItem instanceof SwordItem)) && !(heldItem instanceof AxeItem)) return;
+//        Skill skill = this.getSkill(player).orElse(null);
+//        if (skill == null) return;
+//        if (skill.getLevel() == 0) return;
+//        ModifiableAttributeInstance attributes = player.getAttribute(Attributes.ATTACK_SPEED);
+//        if (attributes != null) {
+//            AttributeModifier modifier = attributes.getModifier(ATTACK_SPEED_UUID);
+//            if (modifier == null) {
+//                attributes.addTransientModifier(new AttributeModifier(ATTACK_SPEED_UUID, "attack_speed", skill.getLevel() * 100, AttributeModifier.Operation.ADDITION));
+//            }
+//            if (modifier != null) {
+//                attributes.removeModifier(ATTACK_SPEED_UUID);
+//            }
+//        }
+//        victim.hurt(new DamageSource("player_additional_attack"), heldItem.getDamage(heldItem.getDefaultInstance()) / (5f - skill.getLevel()));
+    }
 
     @Override
     public TextComponent getDescription(Skill skill) {
-        return getCommonDescriptionContent(skill,"15%","20%","25%");
+        return getCommonDescriptionContent(skill, "15%", "20%", "25%");
     }
 }
 

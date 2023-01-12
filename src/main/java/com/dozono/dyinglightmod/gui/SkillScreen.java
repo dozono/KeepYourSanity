@@ -38,15 +38,15 @@ public class SkillScreen extends Screen {
         this.container = container;
         tabs = new SkillTabGui[]{
                 SkillTabGui.create(Minecraft.getInstance(), this, 0, SkillTypeMandom.INSTANCE,
-                        new TranslationTextComponent("dyinglight.survival"),
+                        new TranslationTextComponent("dying_light.survival"),
 //                        new IconSprite(0, 0, 32, 32, SKILL_ICON_LOCATION),
                         new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),
                 SkillTabGui.create(Minecraft.getInstance(), this, 1, SkillTypePlunder.INSTANCE,
-                        new TranslationTextComponent("dyinglight.combat"),
+                        new TranslationTextComponent("dying_light.combat"),
 //                        new IconSprite(64, 32, 32, 32, SKILL_ICON_LOCATION),
                         new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png")),
                 SkillTabGui.create(Minecraft.getInstance(), this, 2, SkillTypeDoubleJump.INSTANCE,
-                        new TranslationTextComponent("dyinglight.agility"),
+                        new TranslationTextComponent("dying_light.agility"),
 //                        new IconSprite(64, 0, 32, 32, SKILL_ICON_LOCATION),
                         new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png"))
         };
