@@ -57,8 +57,8 @@ public class SkillTypeMandom extends SkillType {
         if (player.level.isClientSide) return;
         Optional<Skill> skill = this.getSkill(player);
         if (skill.isPresent() && player.isAlive() && skill.get().getLevel() > 0) {
-            this.updateMaxHealth(player, skill.get().getLevel());
             player.setHealth(40f);
+            this.updateMaxHealth(player, skill.get().getLevel());
         }
     }
 
